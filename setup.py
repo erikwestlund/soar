@@ -1,15 +1,13 @@
 from setuptools import setup
 
 setup(
-    name='soar',
-    version='0.1.0',
-    py_modules=['soar'],
-    install_requires=[
-        'Click',
-    ],
+    name="soar",
+    version="0.1.0",
+    py_modules=["soar"],
+    install_requires=["Click", "keyring", "pyyaml"],
     entry_points={
-        'console_scripts': [
-            'soar = soar:cli',
+        "console_scripts": [
+            "soar = soar:cli",
         ],
     },
 )
