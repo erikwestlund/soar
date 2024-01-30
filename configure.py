@@ -1,10 +1,34 @@
 import click
-import keyring
 import os
 import yaml
+import rpy2.robjects.packages as rpackages
+from accounts import user_has_jhed_password
+keyring = rpackages.importr("keyring")
 
+
+# To do: deprecate env vars
+# Use from yaml instead
+#
 
 def set_credentials(self, refresh=False):
+    click.secho("NOTE:", bg="red", fg="white", bold=True)
+    click.secho("During configuration, you will be prompted for a keyring password.", fg="yellow")
+    click.secho(
+        "The keyring password is different from your JHED.",
+        fg="yellow",
+    )
+    click.secho(
+        "The keyring password will be used to unlock the secure vault where credentials are stored.",
+        fg="yellow",
+    )
+    click.secho(
+        "These passwords do not need to be the same, and for security, it is recommended that they are not.",
+        fg="yellow",
+    )
+
+    # First check for the keyring service
+    # If not exists, create it
+    # If exists, unlock it first.
 
     # Set JHED if not set or refresh is True
     if refresh or not os.environ.get("user_jhed"):
@@ -13,10 +37,10 @@ def set_credentials(self, refresh=False):
         jhed_username = os.environ.get("user_jhed")
 
     # Set JHED password if not set or refresh is True
-    if refresh or keyring.get_password("jhed", jhed_username) is None:
+    if refresh or not user_has_jhed_password(jhed_username):
         jhed_password = click.prompt("Enter your JHED password", hide_input=True)
     else:
-        jhed_password = keyring.get_password("jhed", jhed_username)
+        jhed_password = keyring.key_get("jhed", jhed_username)
 
     # Set GitHub username if not set or refresh is True
     if refresh or not os.environ.get("github_username"):
@@ -44,7 +68,7 @@ def set_jhed_username(jhed_username):
 
 
 def set_keyring_password(jhed_username, jhed_password):
-    keyring.set_password("jhed", jhed_username, jhed_password)
+    keyring.key_set_with_value("jhed", jhed_username, jhed_password)
     click.secho(
         "Stored your JHED password in the system credential manager", fg="green"
     )
