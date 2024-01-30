@@ -1,19 +1,42 @@
 import click
+from configure.configure import Configure
+from enhance import run_enhance_shell, run_install_rstudio_keybindings
+from status import get_status
 
-@click.group("setup")
+@click.group()
 @click.pass_context
-def setup(ctx, command):
-   """Tools for making CrunchR soar"""
-   click.echo("Installing R packages...")
+def main(ctx):
+    """Tooling to make CrunchR soar."""
 
-@click.group("configure")
+@main.command()
 @click.pass_context
-def configure(ctx, command):
-   """Configure your CrunchR instance"""
-   click.echo("Configuring...")
+def configure(ctx):
+    """Configure your CrunchR container."""
+    configure = Configure()
+    configure.run()
 
-def main():
-   setup(prog_name="setup")
+@main.command()
+@click.pass_context
+def status(ctx):
+    """Get the status of your CrunchR container."""
+    get_status(ctx)
+
+@main.group()
+@click.pass_context
+def enhance(ctx):
+    """Enhance your CrunchR container."""
+
+@enhance.command('shell')
+@click.pass_context
+def enhance_shell(ctx):
+    """Enhance your CrunchR shell."""
+    run_enhance_shell(ctx)
+
+@enhance.command('rstudio_keybindings')
+@click.pass_context
+def https_sync(ctx):
+    """Install enhanced RStudio keybindings."""
+    run_install_rstudio_keybindings(ctx)
 
 if __name__ == '__main__':
-   main()
+    main(obj={})
