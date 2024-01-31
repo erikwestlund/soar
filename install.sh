@@ -67,4 +67,6 @@ echo alias crunchr="python3 $STORAGE_DIR/soar/soar.py" >> ~/.bashrc
 alias soar="python3 $STORAGE_DIR/soar/soar.py"
 alias crunchr="python3 $STORAGE_DIR/soar/soar.py"
 
-soar configure
+
+echo "Installation complete."
+echo "Type \"soar configure\" to use Soar."
