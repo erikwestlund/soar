@@ -5,8 +5,6 @@ WORKSPACEPATH="{{ workspace_path }}"
 STORAGEPATH="{{ storage_path }}"
 
 # Easier interaction with Soar
-alias soar="$PYTHONPATH $SOARPATH"
-alias crunchr="$PYTHONPATH $SOARPATH"
 alias maphome="$PYTHONPATH $SOARPATH mount home"
 alias mapsafe="$PYTHONPATH $SOARPATH mount safe"
 

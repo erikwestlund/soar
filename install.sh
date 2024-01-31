@@ -55,7 +55,15 @@ mkdir -p $STORAGE_DIR
 rm -rf $STORAGE_DIR/soar
 git clone https://github.com/erikwestlund/soar.git $STORAGE_DIR/soar
 
-# Create alias
+# Make aliases permanent
+echo alias soar="python3 $STORAGE_DIR/soar/soar.py" >> ~/.bash_profile
+echo alias soar="python3 $STORAGE_DIR/soar/soar.py" >> ~/.zshrc
+echo alias soar="python3 $STORAGE_DIR/soar/soar.py" >> ~/.bashrc
+echo alias crunchr="python3 $STORAGE_DIR/soar/soar.py" >> ~/.bash_profile
+echo alias crunchr="python3 $STORAGE_DIR/soar/soar.py" >> ~/.zshrc
+echo alias crunchr="python3 $STORAGE_DIR/soar/soar.py" >> ~/.bashrc
+
+# Create alias for use now.
 alias soar="python3 $STORAGE_DIR/soar/soar.py"
 alias crunchr="python3 $STORAGE_DIR/soar/soar.py"
 
