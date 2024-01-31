@@ -119,21 +119,25 @@ def set_config(self, update=False):
         )
 
 
+def get_config_location():
+    return get_user_storage_path(get_config()) + "/config.yml"
+
+
 def generate_config_yaml(config):
-    with open("config.yml", "w") as file:
+    with open(get_config_location(), "w") as file:
         yaml.dump(config, file)
 
 
 def get_config():
     default_config = get_default_config()
-    yaml_exists = os.path.exists("config.yml")
+    yaml_exists = os.path.exists(get_config_location())
 
     # If the file does not exist, write the default and return it
     if not yaml_exists:
         write_config(default_config)
         return default_config
     else:
-        with open("config.yml", "r") as file:
+        with open(get_config_location(), "r") as file:
             config = yaml.load(file, Loader=yaml.FullLoader)
 
         # If the file is empty or not a dictionary, return default
@@ -156,7 +160,7 @@ def get_default_config():
 
 
 def write_config(config):
-    with open("config.yml", "w") as file:
+    with open(get_config_location(), "w") as file:
         yaml.dump(config, file)
 
 
