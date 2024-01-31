@@ -27,7 +27,7 @@ def run_mount_home(ctx):
     os.makedirs(home_dir, exist_ok=True)
 
     chown_string = f"sudo chown -R idies:idies {home_dir}"
-    mount_string = f"sudo mount -t cifs -o //mtwfs.nas.jh.edu/HOME/ {home_dir} -o username={config['default']['jhed_username']},workgroup=win,uid=idies,password={jhed_password}"
+    mount_string = f"sudo mount -t cifs //mtwfs.nas.jh.edu/HOME/ {home_dir} -o username={config['default']['jhed_username']},workgroup=win,uid=idies,password={jhed_password}"
 
     os.system(chown_string)
     os.system(mount_string)
