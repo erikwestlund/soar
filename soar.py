@@ -1,6 +1,10 @@
 import click
 from configure import set_config
-from enhance import run_enhance_shell, run_install_rstudio_keybindings, run_install_aliases
+from enhance import (
+    run_enhance_shell,
+    run_install_rstudio_keybindings,
+    run_install_aliases,
+)
 from mount import run_mount_home
 from status import get_status
 

@@ -5,7 +5,7 @@ from configure import (
     get_aliases_path,
     get_bashrc_path,
     get_zshrc_path,
-    get_rstudio_keybindings_path
+    get_rstudio_keybindings_path,
 )
 import click
 import os
