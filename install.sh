@@ -52,6 +52,7 @@ sudo R -e "install.packages('keyring', repos='https://cloud.r-project.org/')"
 # Install Soar
 STORAGE_DIR=/home/idies/workspace/Storage/$JHED_USERNAME/persistent/
 mkdir -p $STORAGE_DIR
+rm -rf $STORAGE_DIR/soar
 git clone https://github.com/erikwestlund/soar.git $STORAGE_DIR/soar
 
 # Create alias
