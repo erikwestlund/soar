@@ -1,0 +1,25 @@
+includedir /etc/krb5.conf.d/
+
+[logging]
+default = FILE:/var/log/krb5libs.log
+kdc = FILE:/var/log/krb5kdc.log
+admin_server = FILE:/var/log/kadmind.log
+
+[libdefaults]
+dns_lookup_realm = false
+dns_lookup_kdc = true
+ticket_lifetime = 24h
+renew_lifetime = 7d
+forwardable = true
+rdns = false
+pkinit_anchors = FILE:/etc/pki/tls/certs/ca-bundle.crt
+default_realm = {{ realm }}
+default_ccache_name = FILE:/tmp/krb5cc_%{uid}
+
+[realms]
+{{ realm }} = {
+  kdc = {{ kdc}}
+}
+
+[domain_realm]
+.{{ realm }} = {{ realm }}
