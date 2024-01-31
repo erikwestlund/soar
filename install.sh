@@ -9,9 +9,9 @@ sudo yum -y install \
             openssl11-devel dbus-devel sqlite-devel krb5-server krb5-libs krb5-workstation
 
 # Setup MsSql Tools
-sudo su
-curl https://packages.microsoft.com/config/rhel/8/prod.repo > /etc/yum.repos.d/msprod.repo
-exit
+curl https://packages.microsoft.com/config/rhel/8/prod.repo -o /tmp/msprod.repo
+sudo tee /tmp/msprod.repo -a /etc/yum.repos.d/msprod.repo
+rm /tmp/msprod.repo
 
 sudo yum -y remove mssql-tools unixODBC-utf16-devel
 export ACCEPT_EULA='y'
@@ -51,3 +51,6 @@ pip3 install keyring click pyyaml black rpy2 sh
 
 # Install Soar
 git clone https://github.com/erikwestlund/soar.git /home/idies/workspace/Storage/persistent/$JHED_USERNAME/soar
+
+# Create alias
+alias soar="python3 /home/idies/workspace/Storage/persistent/$JHED_USERNAME/soar/soar.py"
