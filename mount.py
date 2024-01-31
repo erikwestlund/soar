@@ -28,4 +28,6 @@ def run_mount_home(ctx):
 
     string = f"sudo mount -t cifs -o //mtwfs.nas.jh.edu/HOME/ {home_dir} -o username={config['default']['jhed_username']},workgroup=win,uid=idies,password={jhed_password}"
 
-    print(string)
+    os.system(string)
+
+    click.secho(f"Mounted HOME directory to {home_dir}.", fg="green", bold=True)
