@@ -4,6 +4,7 @@ from credentials import (
     keyring_is_locked,
     unlock_keyring,
     get_password,
+    set_keyring_password
 )
 import os
 import rpy2.robjects.packages as rpackages
@@ -83,10 +84,6 @@ def set_config(self, update=False):
         click.secho("Password updated.", fg="green")
 
     click.secho("Configuration saved to config.yml.", fg="green")
-
-
-def set_keyring_password(jhed_username, jhed_password):
-    keyring.key_set_with_value("jhed", jhed_username, jhed_password)
 
 
 def generate_config_yaml(config):

@@ -29,4 +29,8 @@ def keyring_is_locked():
 
 
 def get_password(username):
-    return keyring.key_get("jhed", username)
+    return keyring.key_get("jhed", username)[0]
+
+
+def set_keyring_password(jhed_username, jhed_password):
+    keyring.key_set_with_value("jhed", jhed_username, jhed_password)
