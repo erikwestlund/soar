@@ -17,7 +17,12 @@ def user_has_jhed_password(jhed_username):
 
 def unlock_keyring():
     click.secho("🔐 Unlock your keyring to proceed.", bg="white", fg="red", bold=True)
-    click.secho("If this is your first time, pick a password different from your JHED's.", bg="white", fg="red", bold=True)
+    click.secho(
+        "If this is your first time, pick a password different from your JHED's.",
+        bg="white",
+        fg="red",
+        bold=True,
+    )
     try:
         keyring.keyring_unlock()
     except Exception as e:

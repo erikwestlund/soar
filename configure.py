@@ -4,7 +4,7 @@ from credentials import (
     keyring_is_locked,
     unlock_keyring,
     get_password,
-    set_keyring_password
+    set_keyring_password,
 )
 import os
 import rpy2.robjects.packages as rpackages
@@ -122,10 +122,7 @@ def get_config():
 
 def get_default_config():
     return {
-        "default": {
-            "jhed_username": None,
-            "configured": False
-        },
+        "default": {"jhed_username": None, "configured": False},
         "github": {
             "username": None,
             "email": None,
