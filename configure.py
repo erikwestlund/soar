@@ -17,6 +17,12 @@ def set_config(self, update=False):
     config = get_config()
     password_updated = False
 
+    first_run = not config["default"]["configured"]
+
+    if first_run:
+        click.secho("Welcome to CrunchR!", fg="green")
+        click.secho("Let's get started by configuring your container.", fg="green")
+
     if keyring_is_locked():
         unlock_keyring()
         click.secho("Unlocked the keyring.", fg="green")
@@ -25,7 +31,7 @@ def set_config(self, update=False):
         click.secho("Blank answers will not be recorded.", fg="yellow")
 
     # Set JHED if not set or update is True
-    if update or not config["default"]["jhed_username"]:
+    if first_run or update or not config["default"]["jhed_username"]:
         config["default"]["jhed_username"] = click.prompt(
             "Enter your JHED (without @jh.edu)",
             default=config["default"]["jhed_username"],
@@ -33,7 +39,7 @@ def set_config(self, update=False):
 
     # Set JHED password if not set or update is True
     jhed_password_set = user_has_jhed_password(config["default"]["jhed_username"])
-    if update or not jhed_password_set:
+    if first_run or update or not jhed_password_set:
         current_password = get_password(config["default"]["jhed_username"])
 
         jhed_password = click.prompt("Enter your JHED password", hide_input=True)
@@ -43,20 +49,20 @@ def set_config(self, update=False):
             password_updated = True
 
     # Set GitHub username if not set or update is True
-    if update or not config["github"]["username"]:
+    if first_run or update or not config["github"]["username"]:
         config["github"]["username"] = click.prompt(
             "Enter your GitHub username", default=config["github"]["username"]
         )
 
     # Set GitHub email if not set or update is True
-    if update or not config["github"]["email"]:
+    if first_run or update or not config["github"]["email"]:
         config["github"]["email"] = click.prompt(
             "Enter the email address associated with your GitHub username",
             default=config["github"]["email"],
         )
 
     # Set GitHub core editor if not set or update is True
-    if update or not config["github"]["core_editor"]:
+    if first_run or update or not config["github"]["core_editor"]:
         default_editor_number = (
             1
             if config["github"]["core_editor"] == "nano"
@@ -77,6 +83,8 @@ def set_config(self, update=False):
             config["github"]["core_editor"] = "emacs"
         else:
             config["github"]["core_editor"] = "nano"
+
+    config["default"]["configured"] = True
 
     generate_config_yaml(config)
 
@@ -115,7 +123,8 @@ def get_config():
 def get_default_config():
     return {
         "default": {
-            "user_jhed": None,
+            "jhed_username": None,
+            "configured": False
         },
         "github": {
             "username": None,
