@@ -7,6 +7,7 @@ from credentials import (
     set_keyring_password,
 )
 import os
+from pathlib import Path
 import rpy2.robjects.packages as rpackages
 import yaml
 
@@ -121,9 +122,7 @@ def set_config(self, update=False):
 
 def get_config_location(default=False):
     return (
-        get_user_storage_path(get_config())
-        + "/"
-        + ("config.default.yml" if default else "config.yml")
+        Path(__file__).parent / ("config.default.yml" if default else "config.yml")
     )
 
 
@@ -163,7 +162,7 @@ def get_config():
 
 
 def get_default_config():
-    with open(get_config_location(default=True), "r") as file:
+    with open(get_default_config_location(), "r") as file:
         return yaml.load(file, Loader=yaml.FullLoader)
 
 
