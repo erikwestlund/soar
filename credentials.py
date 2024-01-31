@@ -17,6 +17,7 @@ def user_has_jhed_password(jhed_username):
 
 def unlock_keyring():
     click.secho("🔐 Unlock your keyring to proceed.", bg="white", fg="red", bold=True)
+    click.secho("If this is your first time, pick a password different from your JHED's.", bg="white", fg="red", bold=True)
     try:
         keyring.keyring_unlock()
     except Exception as e:
@@ -29,7 +30,10 @@ def keyring_is_locked():
 
 
 def get_password(username):
-    return keyring.key_get("jhed", username)[0]
+    try:
+        return keyring.key_get("jhed", username)[0]
+    except:
+        return None
 
 
 def set_keyring_password(jhed_username, jhed_password):
