@@ -15,7 +15,7 @@ This package is a CLI helper for the Johns Hopkins University Crunchr platform. 
 Install the package by running this command:
 
 ```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/erikwestlund/install/HEAD/install.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/erikwestlund/soar/master/install.sh)"
 ```
 
 ## Package Information
