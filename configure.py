@@ -123,7 +123,7 @@ def get_config_location(default=False):
     return (
         get_user_storage_path(get_config())
         + "/"
-        + ("config.default.yml" if default else "config.default.yml")
+        + ("config.default.yml" if default else "config.yml")
     )
 
 
