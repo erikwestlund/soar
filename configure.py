@@ -119,8 +119,16 @@ def set_config(self, update=False):
         )
 
 
-def get_config_location(default = False):
-    return get_user_storage_path(get_config()) + "/" +  ("config.default.yml" if default else "config.default.yml")
+def get_config_location(default=False):
+    return (
+        get_user_storage_path(get_config())
+        + "/"
+        + ("config.default.yml" if default else "config.default.yml")
+    )
+
+
+def get_default_config_location():
+    return get_config_location(default=True)
 
 
 def generate_config_yaml(config):
@@ -155,7 +163,7 @@ def get_config():
 
 
 def get_default_config():
-    with open("config.default.yml", "r") as file:
+    with open(get_config_location(default=True), "r") as file:
         return yaml.load(file, Loader=yaml.FullLoader)
 
 
