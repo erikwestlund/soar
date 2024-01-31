@@ -14,4 +14,4 @@ This package is currently under development.
 
 It is written in Python.
 
-Author: [Erik Westlund](ewestlund@jhu.edu)
+Author: [Erik Westlund](https://publichealth.jhu.edu/faculty/4677/erik-westlund)
