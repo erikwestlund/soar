@@ -1,6 +1,7 @@
 import click
-from configure import set_credentials
+from configure import set_config
 from enhance import run_enhance_shell, run_install_rstudio_keybindings
+from mount import run_mount_home
 from status import get_status
 
 
@@ -12,9 +13,16 @@ def main(ctx):
 
 @main.command()
 @click.pass_context
-def configure(ctx):
+@click.option(
+    "--update",
+    "-u",
+    is_flag=True,
+    show_default=True,
+    help="Update all configuration items. Default is to update only empty values.",
+)
+def configure(ctx, update):
     """Configure your CrunchR container."""
-    set_credentials(ctx)
+    set_config(ctx, update)
 
 
 @main.command()
@@ -22,6 +30,26 @@ def configure(ctx):
 def status(ctx):
     """Get the status of your CrunchR container."""
     get_status(ctx)
+
+
+@main.group()
+@click.pass_context
+def mount(ctx):
+    """Mount network volumes on your container."""
+
+
+@mount.command("home")
+@click.pass_context
+def mount_home(ctx):
+    """Mount your home directory to your container."""
+    run_mount_home(ctx)
+
+
+@mount.command("safe")
+@click.pass_context
+def mount_home(ctx):
+    """Mount a SAFE directory to your container."""
+    # run_mount_home(ctx)
 
 
 @main.group()

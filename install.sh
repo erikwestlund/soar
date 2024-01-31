@@ -40,4 +40,4 @@ sudo ln -fs /usr/local/bin/pip3.10 /usr/bin/pip3
 /usr/local/bin/python3.10 -m pip install --upgrade pip
 
 # Install dependencies needed by Soar
-pip3 install keyring click pyyaml black rpy2
+pip3 install keyring click pyyaml black rpy2 sh

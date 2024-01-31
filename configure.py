@@ -1,133 +1,140 @@
 import click
+from credentials import (
+    user_has_jhed_password,
+    keyring_is_locked,
+    unlock_keyring,
+    get_password,
+)
 import os
-import yaml
 import rpy2.robjects.packages as rpackages
-from accounts import user_has_jhed_password
+import yaml
+
 keyring = rpackages.importr("keyring")
 
 
-# To do: deprecate env vars
-# Use from yaml instead
-#
+def set_config(self, update=False):
+    config = get_config()
+    password_updated = False
 
-def set_credentials(self, refresh=False):
-    click.secho("NOTE:", bg="red", fg="white", bold=True)
-    click.secho("During configuration, you will be prompted for a keyring password.", fg="yellow")
-    click.secho(
-        "The keyring password is different from your JHED.",
-        fg="yellow",
-    )
-    click.secho(
-        "The keyring password will be used to unlock the secure vault where credentials are stored.",
-        fg="yellow",
-    )
-    click.secho(
-        "These passwords do not need to be the same, and for security, it is recommended that they are not.",
-        fg="yellow",
-    )
+    if keyring_is_locked():
+        unlock_keyring()
+        click.secho("Unlocked the keyring.", fg="green")
 
-    # First check for the keyring service
-    # If not exists, create it
-    # If exists, unlock it first.
+    if update:
+        click.secho("Blank answers will not be recorded.", fg="yellow")
 
-    # Set JHED if not set or refresh is True
-    if refresh or not os.environ.get("user_jhed"):
-        jhed_username = click.prompt("Enter your JHED (without @jh.edu)")
-    else:
-        jhed_username = os.environ.get("user_jhed")
-
-    # Set JHED password if not set or refresh is True
-    if refresh or not user_has_jhed_password(jhed_username):
-        jhed_password = click.prompt("Enter your JHED password", hide_input=True)
-    else:
-        jhed_password = keyring.key_get("jhed", jhed_username)
-
-    # Set GitHub username if not set or refresh is True
-    if refresh or not os.environ.get("github_username"):
-        github_username = click.prompt("Enter your GitHub username")
-    else:
-        github_username = os.environ.get("github_username")
-
-    # Set GitHub email if not set or refresh is True
-    if refresh or not os.environ.get("github_email"):
-        github_email = click.prompt(
-            "Enter the email address associated with your GitHub username"
+    # Set JHED if not set or update is True
+    if update or not config["default"]["jhed_username"]:
+        config["default"]["jhed_username"] = click.prompt(
+            "Enter your JHED (without @jh.edu)",
+            default=config["default"]["jhed_username"],
         )
-    else:
-        github_email = os.environ.get("github_email")
 
-    set_jhed_username(jhed_username)
-    set_keyring_password(jhed_username, jhed_password)
-    set_github_email(github_email)
-    generate_config_yaml(jhed_username, github_username, github_email)
+    # Set JHED password if not set or update is True
+    jhed_password_set = user_has_jhed_password(config["default"]["jhed_username"])
+    if update or not jhed_password_set:
+        current_password = get_password(config["default"]["jhed_username"])
 
+        jhed_password = click.prompt("Enter your JHED password", hide_input=True)
 
-def set_jhed_username(jhed_username):
-    os.environ["USER_JHED"] = jhed_username
-    click.secho("Set your JHED username to " + jhed_username, fg="green")
+        if jhed_password != "":
+            set_keyring_password(config["default"]["jhed_username"], jhed_password)
+            password_updated = True
+
+    # Set GitHub username if not set or update is True
+    if update or not config["github"]["username"]:
+        config["github"]["username"] = click.prompt(
+            "Enter your GitHub username", default=config["github"]["username"]
+        )
+
+    # Set GitHub email if not set or update is True
+    if update or not config["github"]["email"]:
+        config["github"]["email"] = click.prompt(
+            "Enter the email address associated with your GitHub username",
+            default=config["github"]["email"],
+        )
+
+    # Set GitHub core editor if not set or update is True
+    if update or not config["github"]["core_editor"]:
+        default_editor_number = (
+            1
+            if config["github"]["core_editor"] == "nano"
+            else 2
+            if config["github"]["core_editor"] == "vi"
+            else 3
+        )
+        option = click.prompt(
+            "Enter your preferred text editor for Git (1=nano, 2=vi, 3=emacs)",
+            default=default_editor_number,
+        )
+
+        if option == 1:
+            config["github"]["core_editor"] = "nano"
+        elif option == 2:
+            config["github"]["core_editor"] = "vi"
+        elif option == 3:
+            config["github"]["core_editor"] = "emacs"
+        else:
+            config["github"]["core_editor"] = "nano"
+
+    generate_config_yaml(config)
+
+    if password_updated:
+        click.secho("Password updated.", fg="green")
+
+    click.secho("Configuration saved to config.yml.", fg="green")
 
 
 def set_keyring_password(jhed_username, jhed_password):
     keyring.key_set_with_value("jhed", jhed_username, jhed_password)
-    click.secho(
-        "Stored your JHED password in the system credential manager", fg="green"
-    )
 
 
-def set_github_username(github_username):
-    os.environ["GITHUB_USERNAME"] = github_username
-    click.secho("Set your GitHub username to " + github_username, fg="green")
+def generate_config_yaml(config):
+    with open("config.yml", "w") as file:
+        yaml.dump(config, file)
 
 
-def set_github_email(github_email):
-    os.environ["GITHUB_EMAIL"] = github_email
-    click.secho("Set your GitHub email to " + github_email, fg="green")
+def get_config():
+    default_config = get_default_config()
+    yaml_exists = os.path.exists("config.yml")
+
+    # If the file does not exist, write the default and return it
+    if not yaml_exists:
+        write_config(default_config)
+        return make_compatible(default_config)
+    else:
+        with open("config.yml", "r") as file:
+            config = yaml.load(file, Loader=yaml.FullLoader)
+
+        # If the file is empty or not a dictionary, return default
+        if not isinstance(config, dict):
+            write_config(default_config)
+            return make_compatible(default_config)
+
+    # Return compatible config with default values filled in
+    return make_compatible(default_config | config)
 
 
-def generate_config_yaml(jhed_username, github_username, github_email):
-    config = {
+def get_default_config():
+    return {
         "default": {
-            "user_jhed": jhed_username,
+            "user_jhed": None,
         },
         "github": {
-            "username": github_username,
-            "email": github_email,
+            "username": None,
+            "email": None,
             "core_editor": "nano",
             "default_branch": "main",
         },
-        "my_pmap_db": {
-            "irb_number": "IRBXXXXXXXX",
-            "db_driver": "FreeTDS",
-            "db_server": "my.database.address.jhu.edu",
-            "db_port": 99999,
-            "db_TDS_version": "8.0",
-            "projection_name": "MY_PMAP_Projection",
-            "scratch_name": "MY_PMAP_Scratch",
-            "schema_name": "dbo",
-            "safe_folder": "MY_PMAP_DB",
-            "patient_id_name": "patient_id",
-            "episode_id_name": "episode_id",
-            "encounter_id_name": "encounter_id",
-            "min_birth_year": 1890,
-            "start_dt": "2020-03-01 00:00:01",
-            "end_dt": "2025-05-01 00:00:01",
-            "limit_by_start_end_dt": False,
-            "min_age": 18,
-            "limit_by_min_age": False,
-            ## projection_metadata,
-            "projection_metadata_table": "projection_status",  # Newer Projections,
-            "projection_metadata_table_col": "table_name",  # projection_metadata,
-            "projection_metadata_date_col": "end_dt",  # projection_metadata,
-            "cohort_definition_table": "dbo.definition_table",
-            "scratch_metadata_table": "scratch_metadata",
-            # Report Information,
-            "options_echo": False,
-            "options_results": "asis",
-            "options_message": False,
-            "options_warnings": True,
-            "options_knitr_na": "",
-        },
     }
+
+
+def write_config(config):
     with open("config.yml", "w") as file:
-        yaml.dump(config, file)
-    click.secho("Generated config.yml", fg="green")
+        yaml.dump(make_compatible(config), file)
+
+
+def make_compatible(config):
+    config["default"]["user_jhed"] = config["default"]["jhed_username"]
+
+    return config
