@@ -50,7 +50,7 @@ pip3 install keyring click pyyaml black rpy2 sh jinja2
 Rscript -e "install.packages('keyring')"
 
 # Install Soar
-STORAGE_DIR="/home/idies/workspace/Storage/$JHED_USERNAME/persistent/"
+STORAGE_DIR="/home/idies/workspace/Storage/$JHED_USERNAME/persistent"
 mkdir -p $STORAGE_DIR
 rm -rf "$STORAGE_DIR/soar"
 git clone https://github.com/erikwestlund/soar.git "$STORAGE_DIR/soar"
