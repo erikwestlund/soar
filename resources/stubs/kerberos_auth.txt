@@ -14,12 +14,12 @@ forwardable = true
 rdns = false
 pkinit_anchors = FILE:/etc/pki/tls/certs/ca-bundle.crt
 default_realm = {{ realm }}
-default_ccache_name = FILE:/tmp/krb5cc_%{uid}
+default_ccache_name = FILE:/tmp/krb5cc_%{{ '{' }}uid{{ '}' }}
 
 [realms]
-{{ realm }} = {
-  kdc = {{ kdc}}
-}
+{{ realm }} = {{ '{' }}
+  kdc = {{ kdc }}
+{{ '}' }}
 
 [domain_realm]
 .{{ realm }} = {{ realm }}

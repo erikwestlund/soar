@@ -42,7 +42,6 @@ def run_install_aliases(ctx):
         storage_path=get_user_storage_path(config),
     )
 
-
     # write to ~/.aliases
     aliases_location = get_aliases_path(config)
     with open(aliases_location, "w") as f:

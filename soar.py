@@ -5,6 +5,7 @@ from enhance import (
     run_install_rstudio_keybindings,
     run_install_aliases,
 )
+from make import make_kerberos_auth
 from mount import run_mount_home
 from status import get_status
 
@@ -81,6 +82,19 @@ def enhance_aliases(ctx):
 def https_sync(ctx):
     """Install enhanced RStudio keybindings."""
     run_install_rstudio_keybindings(ctx)
+
+
+@main.group()
+@click.pass_context
+def make(ctx):
+    """Make files using templates for various tasks, such as authorization to databases."""
+
+
+@make.command("kerberos_auth")
+@click.pass_context
+def enhance_shell(ctx):
+    """Create a kerberos auth template."""
+    make_kerberos_auth(ctx)
 
 
 if __name__ == "__main__":

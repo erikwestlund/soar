@@ -1,10 +1,12 @@
 # Get user's JHED
-read -p "This will update your contain? (Y/N): " confirm && [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] || exit 1
+read -p "This will update your container. Do you wish to proceed? (Y/N): " confirm && [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] || exit 1
 
 read -p "Enter your JHED: " JHED_USERNAME
 
 # Install packages required
-sudo yum -y install libsecret libsodium openssl-devel bzip2-devel libffi-devel epel openssl11-devel dbus-devel sqlite-devel
+sudo yum -y install \
+            libsecret libsodium openssl-devel bzip2-devel libffi-devel epel \
+            openssl11-devel dbus-devel sqlite-devel krb5-server krb5-libs krb5-workstation
 
 # Setup MsSql Tools
 sudo su
