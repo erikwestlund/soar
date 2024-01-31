@@ -119,8 +119,8 @@ def set_config(self, update=False):
         )
 
 
-def get_config_location():
-    return get_user_storage_path(get_config()) + "/config.yml"
+def get_config_location(default = False):
+    return get_user_storage_path(get_config()) + "/" +  ("config.default.yml" if default else "config.default.yml")
 
 
 def generate_config_yaml(config):
