@@ -1,6 +1,5 @@
 # Get user's JHED
 read -p "This will update your container. Do you wish to proceed? (Y/N): " confirm && [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] || exit 1
-
 read -p "Enter your JHED: " JHED_USERNAME
 
 # Install packages required
@@ -10,7 +9,7 @@ sudo yum -y install \
 
 # Setup MsSql Tools
 curl https://packages.microsoft.com/config/rhel/8/prod.repo -o /tmp/msprod.repo
-sudo tee /tmp/msprod.repo -a /etc/yum.repos.d/msprod.repo
+cat /tmp/msprod.repo | sudo tee -a /etc/yum.repos.d/msprod.repo > /dev/null
 rm /tmp/msprod.repo
 
 sudo yum -y remove mssql-tools unixODBC-utf16-devel
