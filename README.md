@@ -4,10 +4,10 @@ This package is a CLI helper for the Johns Hopkins University Crunchr platform. 
 
 * Mounting network volumes.
 * Preparing containers with the necessary software and dependencies, such as Java runtimes, database drivers, and R/Python packages.
-* Managing a secure vault of credentials that can be easily accessed from R/Python.
+* Managing credentials in a secure vault that can be easily accessed from R/Python.
 * Storing known-working database drivers and other dependencies.
 * Generating config files for analysis notebooks, including database connection strings.
-* Configuring shell environments and aliases.
+* Enhancing the shell environment to be more productive.
 * Configuring RStudio settings on new container instances.
 
 This package is currently under development.
