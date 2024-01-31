@@ -16,8 +16,9 @@ keyring = rpackages.importr("keyring")
 def set_config(self, update=False):
     config = get_config()
     password_updated = False
+    changes_made = False
 
-    first_run = not config["default"]["configured"]
+    first_run = not config["configured"]
 
     if first_run:
         click.secho("Welcome to CrunchR!", fg="green")
@@ -31,43 +32,43 @@ def set_config(self, update=False):
         click.secho("Blank answers will not be recorded.", fg="yellow")
 
     # Set JHED if not set or update is True
-    if first_run or update or not config["default"]["jhed_username"]:
-        config["default"]["jhed_username"] = click.prompt(
+    if first_run or update or not config["credentials"]["jhed"]["username"]:
+        config["credentials"]["jhed"]["username"] = click.prompt(
             "Enter your JHED (without @jh.edu)",
-            default=config["default"]["jhed_username"],
+            default=config["credentials"]["jhed"]["username"],
         )
+        changes_made = True
 
     # Set JHED password if not set or update is True
-    jhed_password_set = user_has_jhed_password(config["default"]["jhed_username"])
+    jhed_password_set = user_has_jhed_password(config["credentials"]["jhed"]["username"])
     if first_run or update or not jhed_password_set:
-        current_password = get_password(config["default"]["jhed_username"])
+        current_password = get_password(config["credentials"]["jhed"]["username"])
 
         jhed_password = click.prompt("Enter your JHED password", hide_input=True)
 
         if jhed_password != "":
-            set_keyring_password(config["default"]["jhed_username"], jhed_password)
+            set_keyring_password(config["credentials"]["jhed"]["username"], jhed_password)
             password_updated = True
 
     # Set GitHub username if not set or update is True
-    if first_run or update or not config["github"]["username"]:
-        config["github"]["username"] = click.prompt(
-            "Enter your GitHub username", default=config["github"]["username"]
+    if first_run or update or not config["credentials"]["github"]["username"]:
+        config["credentials"]["github"]["username"] = click.prompt(
+            "Enter your GitHub username", default=config["credentials"]["github"]["username"]
         )
+        changes_made = True
 
     # Set GitHub email if not set or update is True
-    if first_run or update or not config["github"]["email"]:
-        config["github"]["email"] = click.prompt(
+    if first_run or update or not config["credentials"]["github"]["email"]:
+        config["credentials"]["github"]["email"] = click.prompt(
             "Enter the email address associated with your GitHub username",
-            default=config["github"]["email"],
+            default=config["credentials"]["github"]["email"],
         )
 
     # Set GitHub core editor if not set or update is True
-    if first_run or update or not config["github"]["core_editor"]:
+    if first_run or update or not config["settings"]["github"]["core_editor"]:
         default_editor_number = (
-            1
-            if config["github"]["core_editor"] == "nano"
-            else 2
-            if config["github"]["core_editor"] == "vi"
+            1 if config["settings"]["github"]["core_editor"] == "nano"
+            else 2 if config["settings"]["github"]["core_editor"] == "vi"
             else 3
         )
         option = click.prompt(
@@ -76,22 +77,36 @@ def set_config(self, update=False):
         )
 
         if option == 1:
-            config["github"]["core_editor"] = "nano"
+            config["settings"]["github"]["core_editor"] = "nano"
         elif option == 2:
-            config["github"]["core_editor"] = "vi"
+            config["settings"]["github"]["core_editor"] = "vi"
         elif option == 3:
-            config["github"]["core_editor"] = "emacs"
+            config["settings"]["github"]["core_editor"] = "emacs"
         else:
-            config["github"]["core_editor"] = "nano"
+            config["settings"]["github"]["core_editor"] = "nano"
 
-    config["default"]["configured"] = True
+        changes_made = True
+
+    # Set GitHub default branch
+    if first_run or update or not config["settings"]["github"]["default_branch"]:
+        config["settings"]["github"]["default_branch"] = click.prompt(
+            "Enter the default branch of your projects.",
+            default=config["settings"]["github"]["default_branch"],
+        )
+
+        changes_made = True
+
+    config["configured"] = True
 
     generate_config_yaml(config)
 
     if password_updated:
         click.secho("Password updated.", fg="green")
 
-    click.secho("Configuration saved to config.yml.", fg="green")
+    if changes_made:
+        click.secho("Configuration saved to config.yml.", fg="green")
+    else:
+        click.secho("No changes made. To update your config, run configure with the -u flag.", fg="yellow")
 
 
 def generate_config_yaml(config):
@@ -106,7 +121,7 @@ def get_config():
     # If the file does not exist, write the default and return it
     if not yaml_exists:
         write_config(default_config)
-        return make_compatible(default_config)
+        return default_config
     else:
         with open("config.yml", "r") as file:
             config = yaml.load(file, Loader=yaml.FullLoader)
@@ -114,30 +129,17 @@ def get_config():
         # If the file is empty or not a dictionary, return default
         if not isinstance(config, dict):
             write_config(default_config)
-            return make_compatible(default_config)
+            return default_config
 
     # Return compatible config with default values filled in
-    return make_compatible(default_config | config)
+    return default_config | config
 
 
 def get_default_config():
-    return {
-        "default": {"jhed_username": None, "configured": False},
-        "github": {
-            "username": None,
-            "email": None,
-            "core_editor": "nano",
-            "default_branch": "main",
-        },
-    }
+    with open("config.default.yml", "r") as file:
+        return yaml.load(file, Loader=yaml.FullLoader)
 
 
 def write_config(config):
     with open("config.yml", "w") as file:
-        yaml.dump(make_compatible(config), file)
-
-
-def make_compatible(config):
-    config["default"]["user_jhed"] = config["default"]["jhed_username"]
-
-    return config
+        yaml.dump(config, file)

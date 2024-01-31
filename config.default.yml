@@ -1,0 +1,12 @@
+configured: false
+soar: true
+credentials:
+  jhed:
+    username: null
+  github:
+    email: null
+    username: null
+settings:
+  github:
+    core_editor: vi
+    default_branch: main
