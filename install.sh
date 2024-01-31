@@ -46,10 +46,14 @@ sudo ln -fs /usr/local/bin/pip3.10 /usr/bin/pip3
 /usr/local/bin/python3.10 -m pip install --upgrade pip
 
 # Install dependencies needed by Soar
-pip3 install keyring click pyyaml black rpy2 sh
+pip3 install keyring click pyyaml black rpy2 sh jinja2
+sudo R -e "install.packages('keyring', repos='https://cloud.r-project.org/')"
 
 # Install Soar
-git clone https://github.com/erikwestlund/soar.git /home/idies/workspace/Storage/persistent/$JHED_USERNAME/soar
+STORAGE_DIR=/home/idies/workspace/Storage/$JHED_USERNAME/persistent/
+mkdir -p $STORAGE_DIR
+git clone https://github.com/erikwestlund/soar.git $STORAGE_DIR/soar
 
 # Create alias
-alias soar="python3 /home/idies/workspace/Storage/persistent/$JHED_USERNAME/soar/soar.py"
+alias soar="python3 $STORAGE_DIR/soar/soar.py"
+alias crunchr="python3 $STORAGE_DIR/soar/soar.py"
