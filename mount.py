@@ -1,7 +1,7 @@
 import click
 from configure import get_config
 from credentials import get_password, unlock_keyring, keyring_is_locked, user_has_jhed_password, set_keyring_password
-
+import os
 
 def run_mount_home(ctx):
     config = get_config()
