@@ -12,6 +12,6 @@ This package is a CLI helper for the Johns Hopkins University Crunchr platform. 
 
 This package is currently under development.
 
-It is written in Python.
+Soar is written in Python.
 
 Author: [Erik Westlund](https://publichealth.jhu.edu/faculty/4677/erik-westlund)

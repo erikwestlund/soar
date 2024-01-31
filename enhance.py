@@ -8,6 +8,7 @@ from configure import (
     get_rstudio_keybindings_path,
 )
 import click
+from jinja2 import Template
 import os
 
 
@@ -30,16 +31,17 @@ def run_install_aliases(ctx):
     click.secho("Installing quick aliases...")
     config = get_config()
 
-    with open("resources/shell/.aliases", "r") as f:
-        aliases = f.read()
+    with open(f"resources/shell/.aliases", "r") as f:
+        template = Template(f.read())
 
-    aliases = aliases.replace("{{PYTHONPATH}}", config["settings"]["paths"]["python"])
-    aliases = aliases.replace("{{PIPPATH}}", config["settings"]["paths"]["pip"])
-    aliases = aliases.replace("{{SOARPATH}}", get_soar_path(config))
-    aliases = aliases.replace(
-        "{{WORKSPACEPATH}}", config["settings"]["paths"]["workspace"]
+    aliases = template.render(
+        python_path=config["settings"]["paths"]["python"],
+        pip_path=config["settings"]["paths"]["pip"],
+        soar_path=get_soar_path(config),
+        workspace_path=config["settings"]["paths"]["workspace"],
+        storage_path=get_user_storage_path(config),
     )
-    aliases = aliases.replace("{{STORAGEPATH}}", get_user_storage_path(config))
+
 
     # write to ~/.aliases
     aliases_location = get_aliases_path(config)

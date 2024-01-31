@@ -1,8 +1,8 @@
-PYTHONPATH="{{PYTHONPATH}}"
-PIPPATH="{{PIPPATH}}"
-SOARPATH="{{SOARPATH}}"
-WORKSPACEPATH="{{WORKSPACEPATH}}"
-STORAGEPATH="{{STORAGEPATH}}"
+PYTHONPATH="{{ python_path }}"
+PIPPATH="{{ pip_path }}"
+SOARPATH="{{ soar_path }}"
+WORKSPACEPATH="{{ workspace_path }}"
+STORAGEPATH="{{ storage_path }}"
 
 # Easier interaction with Soar
 alias soar="$PYTHONPATH $SOARPATH"
