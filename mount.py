@@ -22,6 +22,10 @@ def run_mount_home(ctx):
     else:
         jhed_password = get_password(config["default"]["jhed_username"])
 
-    string = f"sudo mount -t cifs -o //mtwfs.nas.jh.edu/HOME/ /home/idies/workspace/HOME/ -o username={config['default']['jhed_username']},workgroup=win,uid=idies,password={jhed_password}"
+
+    home_dir = "/home/idies/workspace/HOME/"
+    os.makedirs(home_dir, exist_ok=True)
+
+    string = f"sudo mount -t cifs -o //mtwfs.nas.jh.edu/HOME/ {home_dir} -o username={config['default']['jhed_username']},workgroup=win,uid=idies,password={jhed_password}"
 
     print(string)
