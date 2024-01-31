@@ -10,6 +10,16 @@ This package is a CLI helper for the Johns Hopkins University Crunchr platform. 
 * Enhancing the shell environment to be more productive.
 * Configuring RStudio settings on new container instances.
 
+## Installation
+
+Install the package by running this command:
+
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/erikwestlund/install/HEAD/install.sh)"
+```
+
+## Package Information
+
 This package is currently under development.
 
 Soar is written in Python.
