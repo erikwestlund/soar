@@ -58,3 +58,5 @@ git clone https://github.com/erikwestlund/soar.git $STORAGE_DIR/soar
 # Create alias
 alias soar="python3 $STORAGE_DIR/soar/soar.py"
 alias crunchr="python3 $STORAGE_DIR/soar/soar.py"
+
+soar configure
