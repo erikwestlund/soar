@@ -47,7 +47,7 @@ sudo ln -fs /usr/local/bin/pip3.10 /usr/bin/pip3
 
 # Install dependencies needed by Soar
 pip3 install keyring click pyyaml black rpy2 sh jinja2
-sudo R CMD -e "install.packages('keyring', repos='https://cloud.r-project.org/')"
+Rscript -e "install.packages('keyring')"
 
 # Install Soar
 STORAGE_DIR=/home/idies/workspace/Storage/$JHED_USERNAME/persistent/
