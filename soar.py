@@ -1,6 +1,6 @@
 import click
 from configure import set_config
-from enhance import run_enhance_shell, run_install_rstudio_keybindings
+from enhance import run_enhance_shell, run_install_rstudio_keybindings, run_install_aliases
 from mount import run_mount_home
 from status import get_status
 
@@ -63,6 +63,13 @@ def enhance(ctx):
 def enhance_shell(ctx):
     """Enhance your CrunchR shell."""
     run_enhance_shell(ctx)
+
+
+@enhance.command("aliases")
+@click.pass_context
+def enhance_aliases(ctx):
+    """Install useful shell aliases."""
+    run_install_aliases(ctx)
 
 
 @enhance.command("rstudio_keybindings")

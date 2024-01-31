@@ -40,20 +40,25 @@ def set_config(self, update=False):
         changes_made = True
 
     # Set JHED password if not set or update is True
-    jhed_password_set = user_has_jhed_password(config["credentials"]["jhed"]["username"])
+    jhed_password_set = user_has_jhed_password(
+        config["credentials"]["jhed"]["username"]
+    )
     if first_run or update or not jhed_password_set:
         current_password = get_password(config["credentials"]["jhed"]["username"])
 
         jhed_password = click.prompt("Enter your JHED password", hide_input=True)
 
         if jhed_password != "":
-            set_keyring_password(config["credentials"]["jhed"]["username"], jhed_password)
+            set_keyring_password(
+                config["credentials"]["jhed"]["username"], jhed_password
+            )
             password_updated = True
 
     # Set GitHub username if not set or update is True
     if first_run or update or not config["credentials"]["github"]["username"]:
         config["credentials"]["github"]["username"] = click.prompt(
-            "Enter your GitHub username", default=config["credentials"]["github"]["username"]
+            "Enter your GitHub username",
+            default=config["credentials"]["github"]["username"],
         )
         changes_made = True
 
@@ -67,8 +72,10 @@ def set_config(self, update=False):
     # Set GitHub core editor if not set or update is True
     if first_run or update or not config["settings"]["github"]["core_editor"]:
         default_editor_number = (
-            1 if config["settings"]["github"]["core_editor"] == "nano"
-            else 2 if config["settings"]["github"]["core_editor"] == "vi"
+            1
+            if config["settings"]["github"]["core_editor"] == "nano"
+            else 2
+            if config["settings"]["github"]["core_editor"] == "vi"
             else 3
         )
         option = click.prompt(
@@ -104,9 +111,12 @@ def set_config(self, update=False):
         click.secho("Password updated.", fg="green")
 
     if changes_made:
-        click.secho("Configuration saved to config.yml.", fg="green")
+        click.secho("✅ Configuration saved to config.yml.", fg="green")
     else:
-        click.secho("No changes made. To update your config, run configure with the -u flag.", fg="yellow")
+        click.secho(
+            "No changes made. To update your config, run configure with the -u flag.",
+            fg="yellow",
+        )
 
 
 def generate_config_yaml(config):
@@ -132,7 +142,12 @@ def get_config():
             return default_config
 
     # Return compatible config with default values filled in
-    return default_config | config
+    full_config = default_config | config
+
+    if full_config["credentials"]["jhed"]["username"]:
+        full_config["settings"]["paths"]["storage"] = get_user_storage_path(full_config)
+
+    return full_config
 
 
 def get_default_config():
@@ -143,3 +158,31 @@ def get_default_config():
 def write_config(config):
     with open("config.yml", "w") as file:
         yaml.dump(config, file)
+
+
+def get_user_storage_path(config):
+    return (
+        config["settings"]["paths"]["storage_parent"]
+        + "/"
+        + config["credentials"]["jhed"]["username"]
+    )
+
+
+def get_soar_path(config):
+    return get_user_storage_path(config) + "/soar/soar.py"
+
+
+def get_aliases_path(config):
+    return f"{config['settings']['paths']['home']}/.aliases"
+
+
+def get_bashrc_path(config):
+    return f"{config['settings']['paths']['home']}/.bashrc"
+
+
+def get_zshrc_path(config):
+    return f"{config['settings']['paths']['home']}/.zshrc"
+
+
+def get_rstudio_keybindings_path(config):
+    return f"{config['settings']['paths']['home']}/.config/rstudio/keybindings/editor_bindings.json"

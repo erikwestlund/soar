@@ -1,0 +1,75 @@
+PYTHONPATH="{{PYTHONPATH}}"
+PIPPATH="{{PIPPATH}}"
+SOARPATH="{{SOARPATH}}"
+WORKSPACEPATH="{{WORKSPACEPATH}}"
+STORAGEPATH="{{STORAGEPATH}}"
+
+# Easier interaction with Soar
+alias soar="$PYTHONPATH $SOARPATH"
+alias crunchr="$PYTHONPATH $SOARPATH"
+alias maphome="$PYTHONPATH $SOARPATH mount home"
+alias mapsafe="$PYTHONPATH $SOARPATH mount safe"
+
+# Easier navigation: .., ..., ...., ....., ~ and -
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+
+# Shortcuts
+alias mystorage="echo $STORAGEPATH"
+alias gohome="cd $WORKSPACEPATH"
+
+# List all files colorized in long format
+alias l="ls -lF ${colorflag}"
+
+# List all files colorized in long format, excluding . and ..
+alias la="ls -lAF ${colorflag}"
+
+# List only directories
+alias lsd="ls -lF ${colorflag} | grep --color=never '^d'"
+
+# Always use color output for `ls`
+alias ls="command ls ${colorflag}"
+
+# Always enable colored `grep` output
+# Note: `GREP_OPTIONS="--color=auto"` is deprecated, hence the alias usage.
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+# Enable aliases to be sudo’ed
+alias sudo='sudo '
+
+# Print each PATH entry on a separate line
+alias path='echo -e ${PATH//:/\\n}'
+
+# git
+alias a="git add"
+alias ap="git add -p"
+alias c="git commit --verbose"
+alias ca="git commit -a --verbose"
+alias cm="git commit -m"
+alias cam="git commit -a -m"
+alias m="git commit --amend --verbose"
+
+alias rao="git remote add origin"
+alias ac="git add . && git commit -am"
+
+alias pushdev="git push origin dev"
+alias pushstaging="git push origin staging"
+alias pushmaster="git push origin master"
+alias pushall="git push --all origin"
+
+alias d="git diff"
+alias ds="git diff --stat"
+alias dc="git diff --cached"
+
+alias s="git status"
+alias sv="git status -v"
+alias b="git branch"
+alias co="git checkout"
+alias cob="git checkout -b"
+
+#Python
+alias pvenv=". venv/bin/activate"

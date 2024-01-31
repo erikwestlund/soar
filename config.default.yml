@@ -10,3 +10,12 @@ settings:
   github:
     core_editor: vi
     default_branch: main
+  paths:
+    python: /usr/local/bin/python3.10
+    pip: /usr/local/bin/pip3.10
+    workspace: /home/idies/workspace
+    home: /home/idies/workspace/home
+    storage_parent: /home/idies/workspace/Storage/persistent
+  volumes:
+    user_home: //mtwfs.nas.jh.edu/HOME
+    s_drive: //cloud.nas.jh.edu/sddesktop$

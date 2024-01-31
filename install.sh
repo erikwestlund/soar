@@ -1,3 +1,8 @@
+# Get user's JHED
+read -p "This will update your contain? (Y/N): " confirm && [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] || exit 1
+
+read -p "Enter your JHED: " JHED_USERNAME
+
 # Install packages required
 sudo yum -y install libsecret libsodium openssl-devel bzip2-devel libffi-devel epel openssl11-devel dbus-devel sqlite-devel
 
@@ -41,3 +46,6 @@ sudo ln -fs /usr/local/bin/pip3.10 /usr/bin/pip3
 
 # Install dependencies needed by Soar
 pip3 install keyring click pyyaml black rpy2 sh
+
+# Install Soar
+git clone https://github.com/erikwestlund/soar.git /home/idies/workspace/Storage/persistent/$JHED_USERNAME/soar

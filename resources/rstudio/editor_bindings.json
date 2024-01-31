@@ -1,0 +1,21 @@
+{
+    "expandToMatching": "Ctrl+D|Ctrl+Alt+Shift+E|Ctrl+Alt+Shift+E",
+    "duplicateSelection": "Ctrl+Shift+D",
+    "removeline": "Ctrl+K",
+    "findnext": "Ctrl+Shift+N",
+    "selectlinestart": "Ctrl+Shift+Left",
+    "selectwordleft": "",
+    "gotowordleft": "",
+    "selecttolinestart": "",
+    "gotolineend": "Ctrl+Right|End",
+    "gotowordright": "",
+    "selecttostart": "Ctrl+Shift+Up",
+    "modifyNumberUp": "",
+    "gotolinestart": "Ctrl+Left|Home",
+    "selectlineend": "Ctrl+Shift+Right",
+    "selecttolineend": "",
+    "gotoend": "Ctrl+Down",
+    "scrolldown": "",
+    "gotostart": "Ctrl+Up",
+    "scrollup": ""
+}
