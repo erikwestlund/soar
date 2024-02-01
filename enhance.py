@@ -102,6 +102,8 @@ def run_install_rstudio_keybindings(ctx):
 
     click.secho("Installing enhanced RStudio keybindings...")
     config = get_config()
+
     rstudio_keybindings_path = get_rstudio_keybindings_path()
+    os.makedirs(rstudio_keybindings_path, exist_ok=True)
     os.system(f"cp resources/rstudio/editor_bindings.json {rstudio_keybindings_path}")
     click.secho("✅ Done.", fg="green")
