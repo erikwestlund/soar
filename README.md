@@ -51,7 +51,7 @@ The `soar install` commands allow you to install software and dependencies.
 The `soar enhance` commands allow you to enhance your container environment.
 
 * `soar enhance shell` install the Zsh shell, tells RStudio to use it, and installs Oh My Zsh for a better shell experience. This command also installs the alias helpers described below.
-* `soar enhance rstudio-keybindings` configures RStudio keybindings to be more like popular text editors, such as VSCode and Sublime Text. For example, Ctrl+D will a
+* `soar enhance rstudio-keybindings` configures RStudio keybindings to be more like popular text editors, such as VSCode and Sublime Text. For example, `Ctrl+D` will allow for selecting multiple instances of a word with multiple cursors.
 * `soar enhance aliases` installs useful aliases for the shell, such as git convenience commands (such as `ac` for `git commit -am`).
 
 ### Managing Credentials
