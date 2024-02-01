@@ -17,7 +17,7 @@ settings:
     rstudio_config: /home/idies/.config
     workspace: /home/idies/workspace
     home_storage: /home/idies/workspace/home
-    storage_parent: /home/idies/workspace/Storage/persistent
+    storage_parent: /home/idies/workspace/Storage
   volumes:
     user_home: //mtwfs.nas.jh.edu/HOME
     s_drive: //cloud.nas.jh.edu/sddesktop$
