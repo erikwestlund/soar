@@ -132,4 +132,6 @@ def run_install_rstudio_keybindings(ctx):
 
 
 
-    click.secho("✅ Done. To make the keybindings take effect, click either 1) Session -> Terminate R or Tools -> Modify Keyboard Shortcuts and hit Apply.", fg="green")
+    click.secho("✅ Done.", fg="green")
+    click.secho("🚨 To make the keybindings take effect, click \"Session -> Terminate R\" in RStudio.", bold=True, fg="red", bg="whhite")
+    click.secho("Save your work before terminating.", bold=True, fg="red", bg="whhite")

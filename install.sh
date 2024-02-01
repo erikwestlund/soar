@@ -44,7 +44,7 @@ add_to_path() {
 
 add_to_path "/opt/mssql-tools/bin"
 add_to_path "/usr/local/bin/python3.10"
-add_to_path "/usr/local/bin/pip3"
+add_to_path "/usr/local/bin/pip3.10"
 
 # Delete current instances of path from .bash_profile, .zshrc, and .bashrc
 sed -i '/^export PATH/d' ~/.bash_profile
