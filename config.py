@@ -172,6 +172,16 @@ def get_zshrc_path():
     return f"{config['settings']['paths']['home']}/.zshrc"
 
 
+
+def run_reset_keyring(ctx):
+    config = get_config()
+    click.secho("🔑 Resetting your keyring...", fg="red", bold=True)
+    os.system(f"rm -rf {config['settings']['paths']['rstudio_keyring']}/system.keyring")
+    os.system(f"rm -rf {config['settings']['paths']['rstudio_keyring']}/system.keyring.lck")
+    click.secho("✅ Keyring reset.", fg="green", bold=True)
+    click.secho("Run \"soar configure -u\" to set your credentials again.", fg="green", bold=True)
+
+
 def set_config(self, update=False):
     config = get_config()
     password_updated = False

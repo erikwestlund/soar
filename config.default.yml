@@ -14,6 +14,7 @@ settings:
     python: /usr/local/bin/python3.10
     pip: /usr/local/bin/pip3.10
     home: /home/idies
+    rstudio_keyring: /home/idies/.config/r-keyring
     rstudio_config: /home/idies/.config/rstudio
     workspace: /home/idies/workspace
     home_storage: /home/idies/workspace/home
