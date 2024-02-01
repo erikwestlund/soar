@@ -6,7 +6,7 @@ from enhance import (
     run_install_aliases,
 )
 from make import make_kerberos_auth
-from mount import run_mount_home
+from mount import run_mount_home, run_mount_safe
 from status import get_status
 
 
@@ -61,7 +61,7 @@ def mount_home(ctx):
 @click.pass_context
 def mount_home(ctx):
     """Mount a SAFE directory to your container."""
-    # run_mount_home(ctx)
+    run_mount_safe(ctx)
 
 
 @main.group()

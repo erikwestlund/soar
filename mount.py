@@ -34,7 +34,6 @@ def run_mount_safe(ctx):
         click.secho("Exiting.", fg="red", bold=True)
         exit(1)
 
-    click.secho("Mounting SAFE directory. This may take a moment.")
 
     config = get_config()
     jhed_password = get_password(config["credentials"]["jhed"]["username"])
@@ -44,6 +43,7 @@ def run_mount_safe(ctx):
         type=str,
     )
 
+    click.secho("Mounting SAFE directory. This may take a moment.")
     safe_dir = f"{config['settings']['paths']['workspace']}/{project_name}"
     os.makedirs(safe_dir, exist_ok=True)
 
