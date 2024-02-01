@@ -1,5 +1,6 @@
 # Adapted From: https://gist.github.com/GhostofGoes/94580e76cd251972b15b4821c8a06f59
 config.yml
+.jhed_username
 
 # Editors
 .vscode/
