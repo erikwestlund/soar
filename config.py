@@ -121,6 +121,14 @@ def get_default_config_location():
     return get_config_location(default=True)
 
 
+def get_default_jhed():
+    try:
+        with open(get_soar_path(".jhed_username"), "r") as f:
+            return f.read().strip()
+    except FileNotFoundError:
+        return ""
+
+
 def get_rstudio_config_path():
     config = get_config()
     return f"{config['settings']['paths']['rstudio_config']}"
@@ -180,10 +188,11 @@ def set_config(self, update=False):
         click.secho("Blank answers will not be recorded.", fg="yellow")
 
     # Set JHED if not set or update is True
+    jhed_username_default = config["credentials"]["jhed"]["username"] or get_default_jhed()
     if first_run or update or not config["credentials"]["jhed"]["username"]:
         config["credentials"]["jhed"]["username"] = click.prompt(
             "Enter your JHED (without @jh.edu)",
-            default=config["credentials"]["jhed"]["username"],
+            default=jhed_username_default,
         ).strip()
         changes_made = True
 
@@ -229,7 +238,7 @@ def set_config(self, update=False):
         option = click.prompt(
             "Enter your preferred text editor for Git (1=nano, 2=vi, 3=emacs)",
             default=default_editor_number,
-        ).strip()
+        )
 
         if option == 1:
             config["settings"]["github"]["core_editor"] = "nano"
