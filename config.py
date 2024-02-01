@@ -128,7 +128,7 @@ def get_rstudio_config_path():
 
 def get_rstudio_keybindings_path():
     config = get_config()
-    return f"{config['settings']['paths']['home']}/.config/rstudio/keybindings/editor_bindings.json"
+    return f"{get_rstudio_config_path()}/keybindings/editor_bindings.json"
 
 
 def get_soar_dir():
