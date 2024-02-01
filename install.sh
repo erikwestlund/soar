@@ -34,12 +34,9 @@ sudo make altinstall
 python3.10 -V
 
 # Put Python3/Pip into the path and symlink
-echo export PATH="/usr/local/bin/python3.10:$PATH" >> ~/.bash_profile
-echo export PATH="/usr/local/bin/python3.10:$PATH" >> ~/.zshrc
-echo export PATH="/usr/local/bin/python3.10:$PATH" >> ~/.bashrc
-echo export PATH="/usr/local/bin/pip3.10:$PATH" >> ~/.bash_profile
-echo export PATH="/usr/local/bin/pip3.10:$PATH" >> ~/.zshrc
-echo export PATH="/usr/local/bin/pip3.10:$PATH" >> ~/.bashrc
+echo export PATH="/usr/local/bin/pip3.10:/usr/local/bin/python3.10:$PATH" >> ~/.bash_profile
+echo export PATH="/usr/local/bin/pip3.10:/usr/local/bin/python3.10:$PATH" >> ~/.zshrc
+echo export PATH="/usr/local/bin/pip3.10:/usr/local/bin/python3.10:$PATH" >> ~/.bashrc
 
 sudo ln -fs /usr/local/bin/python3.10 /usr/bin/python3
 sudo ln -fs /usr/local/bin/pip3.10 /usr/bin/pip3
