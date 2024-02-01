@@ -64,7 +64,7 @@ echo "alias crunchr=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.zshrc
 echo "alias crunchr=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.bashrc
 
 # Update soar command
-echo "cd $STORAGE_DIR && git reset --hard HEAD && git pull" >> ~/.bashrc
+echo "cd $STORAGE_DIR && git reset --hard HEAD && git pull && soar configure" >> ~/.bashrc
 
 # Add .soarrc
 cp $STORAGE_DIR/soar/resources/shell/.soarrc ~/.soarrc

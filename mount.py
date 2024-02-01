@@ -2,55 +2,15 @@ import os
 
 import click
 
-from config import get_config
+from config import check_config, get_config
 from credentials import (
     get_password,
-    keyring_is_locked,
-    unlock_keyring,
-    user_has_jhed_password,
 )
 
 
-def check_config(config):
-    if not config["configured"]:
-        click.secho(
-            "Configuration not set. Run configure before proceeding.",
-            fg="red",
-            bold=True,
-        )
-        return False
-
-    if not config["credentials"]["jhed"]["username"]:
-        click.secho(
-            "JHED username not set. Run configure before proceeding.",
-            fg="red",
-            bold=True,
-        )
-        return False
-
-    if keyring_is_locked():
-        unlock_keyring()
-        click.secho("Unlocked the keyring.", fg="green")
-
-    jhed_password_set = user_has_jhed_password(
-        config["credentials"]["jhed"]["username"]
-    )
-    if not jhed_password_set:
-        click.secho(
-            "JHED password not set. Run configure before proceeding.",
-            fg="red",
-            bold=True,
-        )
-        return False
-
-    return True
-
-
 def run_mount_home(ctx):
-    config = get_config()
-
-    if not check_config(config):
-        click.secho("Exiting", fg="red", bold=True)
+    if not check_config():
+        click.secho("Exiting.", fg="red", bold=True)
         exit(1)
 
     jhed_password = get_password(config["credentials"]["jhed"]["username"])
@@ -68,10 +28,8 @@ def run_mount_home(ctx):
 
 
 def run_mount_safe(ctx):
-    config = get_config()
-
-    if not check_config(config):
-        click.secho("Exiting", fg="red", bold=True)
+    if not check_config():
+        click.secho("Exiting.", fg="red", bold=True)
         exit(1)
 
     jhed_password = get_password(config["credentials"]["jhed"]["username"])

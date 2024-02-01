@@ -5,6 +5,7 @@ import click
 from jinja2 import Template
 
 from config import (
+    check_config,
     get_aliases_path,
     get_bashrc_path,
     get_config,
@@ -18,6 +19,10 @@ from config import (
 
 
 def run_enhance_shell(ctx):
+    if not check_config():
+        click.secho("Exiting.", fg="red", bold=True)
+        exit(1)
+
     click.secho("Enhancing your shell with Zsh and OhMyZsh...")
     install_script = get_soar_path("resources/shell/enhance.sh")
     os.system("sh resources/shell/install_zsh.sh")
@@ -36,14 +41,21 @@ def run_enhance_shell(ctx):
     with open(rstudio_options_path, "w") as f:
         f.write(json.dumps(rstudio_options))
 
-    click.secho("✅ Done. Type \"zsh\" in the terminal to use the enhanced Zsh shell right now.", fg="green")
+    click.secho(
+        '✅ Done. Type "zsh" in the terminal to use the enhanced Zsh shell right now.',
+        fg="green",
+    )
 
 
 def run_install_aliases(ctx, install_bash=True, install_zsh=True):
+    if not check_config():
+        click.secho("Exiting.", fg="red", bold=True)
+        exit(1)
+
     click.secho("Installing quick aliases...")
     config = get_config()
 
-    with open(f"resources/shell/.aliases", "r") as f:
+    with open(get_aliases_path(), "r") as f:
         template = Template(f.read())
 
     aliases = template.render(
@@ -81,6 +93,11 @@ def run_install_aliases(ctx, install_bash=True, install_zsh=True):
 
 
 def run_install_rstudio_keybindings(ctx):
+
+    if not check_config():
+        click.secho("Exiting.", fg="red", bold=True)
+        exit(1)
+
     click.secho("Installing enhanced RStudio keybindings...")
     config = get_config()
     rstudio_keybindings_path = get_rstudio_keybindings_path()

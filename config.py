@@ -16,6 +16,41 @@ from credentials import (
 keyring = rpackages.importr("keyring")
 
 
+def check_config(config=None):
+    config = config if config else get_config()
+
+    if not config["configured"]:
+        click.secho(
+            "Configuration not set. Run configure before proceeding.",
+            fg="red",
+            bold=True,
+        )
+        return False
+
+    if not config["credentials"]["jhed"]["username"]:
+        click.secho(
+            "JHED username not set. Run configure before proceeding.",
+            fg="red",
+            bold=True,
+        )
+        return False
+
+    if keyring_is_locked():
+        unlock_keyring()
+        click.secho("Unlocked the keyring.", fg="green")
+
+    jhed_password_set = user_has_jhed_password(
+        config["credentials"]["jhed"]["username"]
+    )
+    if not jhed_password_set:
+        click.secho(
+            "JHED password not set. Run configure before proceeding.",
+            fg="red",
+            bold=True,
+        )
+        return False
+
+    return True
 def generate_config_yaml(config):
     with open(get_config_location(), "w") as file:
         yaml.dump(config, file)
@@ -218,3 +253,5 @@ def set_config(self, update=False):
 def write_config(config):
     with open(get_config_location(), "w") as file:
         yaml.dump(config, file)
+
+
