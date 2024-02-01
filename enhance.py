@@ -15,6 +15,7 @@ from config import (
     get_rstudio_config_path,
     get_rstudio_keybindings_dir,
     get_rstudio_keybindings_path,
+    get_soar_dir,
     get_soar_path,
     get_soar_program_path,
     get_user_storage_path,
@@ -75,7 +76,7 @@ def run_install_aliases(ctx, install_bash=True, install_zsh=True):
     aliases = template.render(
         python_path=config["settings"]["paths"]["python"],
         pip_path=config["settings"]["paths"]["pip"],
-        soar_dir=get_soar_path(),
+        soar_dir=get_soar_dir(),
         soar_path=get_soar_program_path(),
         workspace_path=config["settings"]["paths"]["workspace"],
         storage_path=get_user_storage_path(),
