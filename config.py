@@ -156,6 +156,9 @@ def get_soar_program_path():
 def get_user_storage_path(config=None):
     config = config if config else get_config()
 
+    if not config["credentials"]["jhed"]["username"]:
+        return config["settings"]["paths"]["storage_parent"]
+
     return (
         config["settings"]["paths"]["storage_parent"]
         + "/"
