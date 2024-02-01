@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Get user's JHED
 read -p "This will update your container. Do you wish to proceed? (Y/N): " confirm && [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] || exit 1
 read -p "Enter your JHED: " JHED_USERNAME
@@ -65,4 +67,4 @@ echo "alias crunchr=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.bashrc
 echo $JHED_USERNAME > $STORAGE_DIR/soar/.jhed_username
 
 echo "Installation complete."
-echo "Type \"soar configure\" to use Soar."
+echo "Type \"crunchr configure\" to use Soar."
