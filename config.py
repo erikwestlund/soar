@@ -94,8 +94,9 @@ def get_soar_program_path():
     return get_soar_dir() + "/soar.py"
 
 
-def get_user_storage_path():
-    config = get_config()
+def get_user_storage_path(config=None):
+    config = config if config else get_config()
+
     return (
         config["settings"]["paths"]["storage_parent"]
         + "/"
