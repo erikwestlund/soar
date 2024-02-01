@@ -4,7 +4,7 @@ read -p "Enter your JHED: " JHED_USERNAME
 
 # Install packages required
 sudo yum -y install \
-            libsecret libsodium openssl-devel bzip2-devel libffi-devel epel \
+            libsecret libsodium-devel openssl-devel bzip2-devel libffi-devel epel \
             openssl11-devel dbus-devel sqlite-devel krb5-server krb5-libs krb5-workstation
 
 # Setup MsSql Tools
@@ -63,12 +63,10 @@ echo "alias crunchr=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.bash_profile
 echo "alias crunchr=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.zshrc
 echo "alias crunchr=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.bashrc
 
+source ~/.bashrc
+
 # Store the jhed username in a temporary file to load it on first run
 echo $JHED_USERNAME > $STORAGE_DIR/soar/.jhed_username
-
-# Create alias for use now.
-alias soar="python3 $STORAGE_DIR/soar/soar.py"
-alias crunchr="python3 $STORAGE_DIR/soar/soar.py"
 
 echo "Installation complete."
 echo "Type \"soar configure\" to use Soar."
