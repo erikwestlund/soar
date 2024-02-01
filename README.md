@@ -24,6 +24,8 @@ All commands must be run from a Terminal window in RStudio.
 
 Upon a successful installation, type `soar configure` to configure your container. You will be asked to enter a keyring password, which will be used to encrypt your credentials. You will also be asked to enter your JHED username and password.
 
+To update your configuration at any time, type `soar configure -u` again (note the `-u` flag).
+
 After configuration, you can use the `soar` command to access the various options available.
 
 To view sub-options for the list commends, type `soar <sub-option>`. For example, type `soar install` to see the various different installation options.
@@ -56,7 +58,7 @@ The `soar enhance` commands allow you to enhance your container environment.
 
 ### Managing Credentials
 
-The `soar credential` commands allow you to manage your credentials. It does so by creating a secure keyring that is encrypted with a password you provide.
+The `soar configure` commands allow you to manage your credentials. It does so by creating a secure keyring that is encrypted with a password you provide.
 
 You can store your JHED password in the keyring, as well as any other credentials you need to access databases and other services, such as Github Personal Access Tokens.
 
