@@ -23,11 +23,6 @@ from config import (
     get_zshrc_path,
 )
 
-import rpy2.robjects.packages as rpackages
-from rpy2.rinterface_lib.callbacks import logger as rpy2_logger
-
-rpy2_logger.setLevel(logging.ERROR)
-rstudioapi = rpackages.importr("rstudioapi")
 
 def reload_rstudio_preferences():
     rstudioapi.readPreference()
@@ -135,6 +130,6 @@ def run_install_rstudio_keybindings(ctx):
         f"cp {rstudio_keybindings_template_path} {rstudio_keybindings_system_path}"
     )
 
-    rstudioapi.restartSession()
 
-    click.secho("✅ Done.", fg="green")
+
+    click.secho("✅ Done. To make the keybindings take effect, click either 1) Session -> Terminate R or Tools -> Modify Keyboard Shortcuts and hit Apply.", fg="green")
