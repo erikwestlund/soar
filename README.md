@@ -20,6 +20,8 @@ Install the tool by running this command from an RStudio terminal in a Crunchr c
 
 ## Usage
 
+All commands must be run from a Terminal window in RStudio.
+
 Upon a successful installation, type `soar configure` to configure your container. You will be asked to enter a keyring password, which will be used to encrypt your credentials. You will also be asked to enter your JHED username and password.
 
 After configuration, you can use the `soar` command to access the various options available.
