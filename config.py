@@ -124,7 +124,7 @@ def get_default_config_location():
 def get_default_jhed():
     try:
         with open(get_soar_path(".jhed_username"), "r") as f:
-            return f.read().strip()
+            return f.read()
     except FileNotFoundError:
         return ""
 
@@ -192,7 +192,7 @@ def set_config(self, update=False):
     if first_run or update or not config["credentials"]["jhed"]["username"]:
         config["credentials"]["jhed"]["username"] = click.prompt(
             "Enter your JHED (without @jh.edu)",
-            default=jhed_username_default,
+            default=jhed_username_default or "",
         ).strip()
         changes_made = True
 
