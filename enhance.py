@@ -108,7 +108,6 @@ def run_install_rstudio_keybindings(ctx):
         get_resources_path() + "/rstudio/editor_bindings.json"
     )
     rstudio_keybindings_system_path = get_rstudio_keybindings_path()
-    print(f"cp {rstudio_keybindings_template_path} {rstudio_keybindings_system_path}")
     os.makedirs(get_rstudio_keybindings_dir(), exist_ok=True)
     os.system(
         f"cp {rstudio_keybindings_template_path} {rstudio_keybindings_system_path}"
