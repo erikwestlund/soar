@@ -10,6 +10,7 @@ from config import (
     get_aliases_home_path,
     get_bashrc_path,
     get_config,
+    get_resources_path,
     get_rstudio_config_path,
     get_rstudio_keybindings_path,
     get_soar_path,
@@ -95,7 +96,6 @@ def run_install_aliases(ctx, install_bash=True, install_zsh=True):
 
 
 def run_install_rstudio_keybindings(ctx):
-
     if not check_config():
         click.secho("Exiting.", fg="red", bold=True)
         exit(1)
@@ -103,7 +103,8 @@ def run_install_rstudio_keybindings(ctx):
     click.secho("Installing enhanced RStudio keybindings...")
     config = get_config()
 
-    rstudio_keybindings_path = get_rstudio_keybindings_path()
-    os.makedirs(rstudio_keybindings_path, exist_ok=True)
-    os.system(f"cp resources/rstudio/editor_bindings.json {rstudio_keybindings_path}")
+    rstudio_keybindings_template_path = get_resources_path() + "/rstudio/editor_bindings.json"
+    rstudio_keybindings_system_path = get_rstudio_keybindings_path()
+    os.makedirs(rstudio_keybindings_system_path, exist_ok=True)
+    os.system(f"cp {rstudio_keybindings_template_path} {rstudio_keybindings_system_path}")
     click.secho("✅ Done.", fg="green")

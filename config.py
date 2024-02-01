@@ -140,12 +140,10 @@ def get_rstudio_keybindings_path():
 
 
 def get_soar_dir():
-    config = get_config()
     return get_user_storage_path() + "/soar"
 
 
 def get_soar_path(path):
-    config = get_config()
     return f"{get_soar_dir()}/{path}"
 
 
