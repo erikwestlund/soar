@@ -18,10 +18,6 @@ sudo yum -y remove mssql-tools unixODBC-utf16-devel
 export ACCEPT_EULA='y'
 sudo yum -y install mssql-tools unixODBC-devel
 
-echo export PATH="/opt/mssql-tools/bin:$PATH" >> ~/.bash_profile
-echo export PATH="/opt/mssql-tools/bin:$PATH" >> ~/.zshrc
-echo export PATH="/opt/mssql-tools/bin:$PATH" >> ~/.bashrc
-
 # Install Python 3.10
 mkdir -p /home/idies/workspace/python310
 cd /home/idies/workspace/python310
@@ -33,8 +29,7 @@ sudo ./configure --enable-optimizations
 sudo make altinstall
 python3.10 -V
 
-# Put Python3/Pip into the path and symlink
-
+# Put The MSSQL Tools/Python3/Pip into the path and symlink
 # From: https://stackoverflow.com/questions/44232009/how-to-handle-duplicates-in-my-path-variable
 add_to_path() {
     local dir re
@@ -47,8 +42,14 @@ add_to_path() {
     done
 }
 
+add_to_path "/opt/mssql-tools/bin"
 add_to_path "/usr/local/bin/python3.10"
 add_to_path "/usr/local/bin/pip3"
+
+# Delete current instances of path from .bash_profile, .zshrc, and .bashrc
+sed -i '/^export PATH/d' ~/.bash_profile
+sed -i '/^export PATH/d' ~/.zshrc
+sed -i '/^export PATH/d' ~/.bashrc
 
 echo "export PATH=\"$PATH\"" >> ~/.bash_profile
 echo "export PATH=\"$PATH\"" >> ~/.zshrc
