@@ -135,6 +135,6 @@ def run_install_rstudio_keybindings(ctx):
         '🚨 To make the keybindings take effect, click "Session -> Terminate R" in RStudio.',
         bold=True,
         fg="red",
-        bg="whhite",
+        bg="white",
     )
     click.secho("Save your work before terminating.", bold=True, fg="red", bg="white")
