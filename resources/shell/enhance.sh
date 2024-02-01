@@ -3,5 +3,10 @@ read -p "This will update this container's default system shell to Zsh. Do you w
 
 sudo chsh -s /bin/zsh root
 sudo chsh -s /bin/zsh idies
+cp ~/.zshrc ~/.zshrc.bak
+
 wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh > /dev/null 2>&1
-cat ~/.oh-my-zsh/templates/zshrc.zsh-template >> ~/.zshrc
+
+cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
+cat ~/.zshrc.bak >> ~/.zshrc
+rm ~/.zshrc.bak
