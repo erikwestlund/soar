@@ -137,4 +137,4 @@ def run_install_rstudio_keybindings(ctx):
         fg="red",
         bg="whhite",
     )
-    click.secho("Save your work before terminating.", bold=True, fg="red", bg="whhite")
+    click.secho("Save your work before terminating.", bold=True, fg="red", bg="white")

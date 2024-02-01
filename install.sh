@@ -85,6 +85,9 @@ echo "alias updatesoar=\"cd $STORAGE_DIR/soar && git reset --hard HEAD && git pu
 
 # Add .soarrc
 cp $STORAGE_DIR/soar/resources/shell/.soarrc ~/.soarrc
+echo "source ~/.soarrc" >> ~/.bash_profile
+echo "source ~/.soarrc" >> ~/.zshrc
+echo "source ~/.soarrc" >> ~/.bashrc
 
 # Store the jhed username in a temporary file to load it on first run
 echo $JHED_USERNAME > $STORAGE_DIR/soar/.jhed_username
