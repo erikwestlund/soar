@@ -13,6 +13,7 @@ def run_mount_home(ctx):
         click.secho("Exiting.", fg="red", bold=True)
         exit(1)
 
+    config = get_config()
     jhed_password = get_password(config["credentials"]["jhed"]["username"])
 
     home_dir = config["settings"]["paths"]["home"]
@@ -32,6 +33,7 @@ def run_mount_safe(ctx):
         click.secho("Exiting.", fg="red", bold=True)
         exit(1)
 
+    config = get_config()
     jhed_password = get_password(config["credentials"]["jhed"]["username"])
 
     project_name = click.prompt(
