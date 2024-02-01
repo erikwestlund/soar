@@ -1,17 +1,99 @@
-import click
-from credentials import (
-    user_has_jhed_password,
-    keyring_is_locked,
-    unlock_keyring,
-    get_password,
-    set_keyring_password,
-)
 import os
 from pathlib import Path
+
+import click
 import rpy2.robjects.packages as rpackages
 import yaml
 
+from credentials import (
+    get_password,
+    keyring_is_locked,
+    set_keyring_password,
+    unlock_keyring,
+    user_has_jhed_password,
+)
+
 keyring = rpackages.importr("keyring")
+
+
+def generate_config_yaml(config):
+    with open(get_config_location(), "w") as file:
+        yaml.dump(config, file)
+
+
+def get_aliases_path(config):
+    return f"{config['settings']['paths']['home']}/.aliases"
+
+
+def get_bashrc_path(config):
+    return f"{config['settings']['paths']['home']}/.bashrc"
+
+
+def get_config():
+    default_config = get_default_config()
+    yaml_exists = os.path.exists(get_config_location())
+
+    # If the file does not exist, write the default and return it
+    if not yaml_exists:
+        write_config(default_config)
+        return default_config
+    else:
+        with open(get_config_location(), "r") as file:
+            config = yaml.load(file, Loader=yaml.FullLoader)
+
+        # If the file is empty or not a dictionary, return default
+        if not isinstance(config, dict):
+            write_config(default_config)
+            return default_config
+
+    # Return compatible config with default values filled in
+    full_config = default_config | config
+
+    if full_config["credentials"]["jhed"]["username"]:
+        full_config["settings"]["paths"]["storage"] = get_user_storage_path(full_config)
+
+    return full_config
+
+
+def get_config_location(default=False):
+    return Path(__file__).parent / ("config.default.yml" if default else "config.yml")
+
+
+def get_default_config():
+    with open(get_default_config_location(), "r") as file:
+        return yaml.load(file, Loader=yaml.FullLoader)
+
+
+def get_default_config_location():
+    return get_config_location(default=True)
+
+
+def get_rstudio_keybindings_path(config):
+    return f"{config['settings']['paths']['home']}/.config/rstudio/keybindings/editor_bindings.json"
+
+
+def get_soar_dir(config):
+    return get_user_storage_path(config) + "/soar"
+
+
+def get_soar_path(config, path):
+    return f"{get_soar_dir(config)}/{path}"
+
+
+def get_soar_program_path(config):
+    return get_soar_dir(config) + "/soar.py"
+
+
+def get_user_storage_path(config):
+    return (
+        config["settings"]["paths"]["storage_parent"]
+        + "/"
+        + config["credentials"]["jhed"]["username"]
+    )
+
+
+def get_zshrc_path(config):
+    return f"{config['settings']['paths']['home']}/.zshrc"
 
 
 def set_config(self, update=False):
@@ -120,80 +202,6 @@ def set_config(self, update=False):
         )
 
 
-def get_config_location(default=False):
-    return (
-        Path(__file__).parent / ("config.default.yml" if default else "config.yml")
-    )
-
-
-def get_default_config_location():
-    return get_config_location(default=True)
-
-
-def generate_config_yaml(config):
-    with open(get_config_location(), "w") as file:
-        yaml.dump(config, file)
-
-
-def get_config():
-    default_config = get_default_config()
-    yaml_exists = os.path.exists(get_config_location())
-
-    # If the file does not exist, write the default and return it
-    if not yaml_exists:
-        write_config(default_config)
-        return default_config
-    else:
-        with open(get_config_location(), "r") as file:
-            config = yaml.load(file, Loader=yaml.FullLoader)
-
-        # If the file is empty or not a dictionary, return default
-        if not isinstance(config, dict):
-            write_config(default_config)
-            return default_config
-
-    # Return compatible config with default values filled in
-    full_config = default_config | config
-
-    if full_config["credentials"]["jhed"]["username"]:
-        full_config["settings"]["paths"]["storage"] = get_user_storage_path(full_config)
-
-    return full_config
-
-
-def get_default_config():
-    with open(get_default_config_location(), "r") as file:
-        return yaml.load(file, Loader=yaml.FullLoader)
-
-
 def write_config(config):
     with open(get_config_location(), "w") as file:
         yaml.dump(config, file)
-
-
-def get_user_storage_path(config):
-    return (
-        config["settings"]["paths"]["storage_parent"]
-        + "/"
-        + config["credentials"]["jhed"]["username"]
-    )
-
-
-def get_soar_path(config):
-    return get_user_storage_path(config) + "/soar/soar.py"
-
-
-def get_aliases_path(config):
-    return f"{config['settings']['paths']['home']}/.aliases"
-
-
-def get_bashrc_path(config):
-    return f"{config['settings']['paths']['home']}/.bashrc"
-
-
-def get_zshrc_path(config):
-    return f"{config['settings']['paths']['home']}/.zshrc"
-
-
-def get_rstudio_keybindings_path(config):
-    return f"{config['settings']['paths']['home']}/.config/rstudio/keybindings/editor_bindings.json"

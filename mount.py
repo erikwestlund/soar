@@ -1,13 +1,49 @@
+import os
+
 import click
-from configure import get_config
+
+from config import get_config
 from credentials import (
     get_password,
-    unlock_keyring,
     keyring_is_locked,
+    unlock_keyring,
     user_has_jhed_password,
-    set_keyring_password,
 )
-import os
+
+
+def check_config(config):
+    if not config["configured"]:
+        click.secho(
+            "Configuration not set. Run configure before proceeding.",
+            fg="red",
+            bold=True,
+        )
+        return False
+
+    if not config["credentials"]["jhed"]["username"]:
+        click.secho(
+            "JHED username not set. Run configure before proceeding.",
+            fg="red",
+            bold=True,
+        )
+        return False
+
+    if keyring_is_locked():
+        unlock_keyring()
+        click.secho("Unlocked the keyring.", fg="green")
+
+    jhed_password_set = user_has_jhed_password(
+        config["credentials"]["jhed"]["username"]
+    )
+    if not jhed_password_set:
+        click.secho(
+            "JHED password not set. Run configure before proceeding.",
+            fg="red",
+            bold=True,
+        )
+        return False
+
+    return True
 
 
 def run_mount_home(ctx):
@@ -55,38 +91,3 @@ def run_mount_safe(ctx):
     os.system(mount_string)
 
     click.secho(f"✅ Mounted SAFE directory to {safe_dir}.", fg="green", bold=True)
-
-
-def check_config(config):
-    if not config["configured"]:
-        click.secho(
-            "Configuration not set. Run configure before proceeding.",
-            fg="red",
-            bold=True,
-        )
-        return False
-
-    if not config["credentials"]["jhed"]["username"]:
-        click.secho(
-            "JHED username not set. Run configure before proceeding.",
-            fg="red",
-            bold=True,
-        )
-        return False
-
-    if keyring_is_locked():
-        unlock_keyring()
-        click.secho("Unlocked the keyring.", fg="green")
-
-    jhed_password_set = user_has_jhed_password(
-        config["credentials"]["jhed"]["username"]
-    )
-    if not jhed_password_set:
-        click.secho(
-            "JHED password not set. Run configure before proceeding.",
-            fg="red",
-            bold=True,
-        )
-        return False
-
-    return True
