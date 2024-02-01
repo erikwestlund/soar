@@ -86,7 +86,7 @@ def run_install_aliases(ctx, install_bash=True, install_zsh=True):
                 f.write(f"\n{source_string}")
 
     if install_zsh:
-        with open(zshrc_path, "a") as f:
+        with open(zshrc_path, "a+") as f:
             if source_string not in f.read():
                 f.write(f"\n{source_string}")
 
