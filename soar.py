@@ -5,6 +5,7 @@ from enhance import (
     run_install_rstudio_keybindings,
     run_install_aliases,
 )
+from install import run_install_r_data_science_tools, run_install_r_ohdsi_tools
 from make import make_kerberos_auth
 from mount import run_mount_home, run_mount_safe
 from status import get_status
@@ -42,6 +43,26 @@ def status(ctx):
 def reset_keyring(ctx):
     """Reset your keyring."""
     run_reset_keyring(ctx)
+
+
+@main.group()
+@click.pass_context
+def install(ctx):
+    """Install useful packages and softare."""
+
+
+@install.command("r-data-science")
+@click.pass_context
+def install_r_data_science(ctx):
+    """Install R Data Science tools such as the Tidyverse and connection utilities."""
+    run_install_r_data_science_tools(ctx)
+
+
+@install.command("r-ohdsi")
+@click.pass_context
+def install_r_ohdsi_tools(ctx):
+    """Install R OHDSI tools."""
+    run_install_r_ohdsi_tools(ctx)
 
 
 @main.group()
@@ -84,7 +105,7 @@ def enhance_aliases(ctx):
     run_install_aliases(ctx)
 
 
-@enhance.command("rstudio_keybindings")
+@enhance.command("rstudio-keybindings")
 @click.pass_context
 def https_sync(ctx):
     """Install enhanced RStudio keybindings."""
@@ -97,7 +118,7 @@ def make(ctx):
     """Make files using templates for various tasks, such as authorization to databases."""
 
 
-@make.command("kerberos_auth")
+@make.command("kerberos-auth")
 @click.pass_context
 def enhance_shell(ctx):
     """Create a kerberos auth template."""

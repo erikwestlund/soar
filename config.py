@@ -142,6 +142,7 @@ def get_rstudio_keybindings_dir():
 def get_rstudio_editor_keybindings_path():
     return f"{get_rstudio_keybindings_dir()}/editor_bindings.json"
 
+
 def get_rstudio_keybindings_path():
     return f"{get_rstudio_keybindings_dir()}/rstudio_bindings.json"
 
@@ -209,7 +210,9 @@ def run_set_config(self, update=False):
         click.secho("Blank answers will not be recorded.", fg="yellow")
 
     # Set JHED if not set or update is True
-    jhed_username_default = config["credentials"]["jhed"]["username"] or get_default_jhed()
+    jhed_username_default = (
+        config["credentials"]["jhed"]["username"] or get_default_jhed()
+    )
 
     if first_run or update or not config["credentials"]["jhed"]["username"]:
         config["credentials"]["jhed"]["username"] = click.prompt(

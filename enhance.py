@@ -130,8 +130,11 @@ def run_install_rstudio_keybindings(ctx):
         f"cp {rstudio_keybindings_template_path} {rstudio_keybindings_system_path}"
     )
 
-
-
     click.secho("✅ Done.", fg="green")
-    click.secho("🚨 To make the keybindings take effect, click \"Session -> Terminate R\" in RStudio.", bold=True, fg="red", bg="whhite")
+    click.secho(
+        '🚨 To make the keybindings take effect, click "Session -> Terminate R" in RStudio.',
+        bold=True,
+        fg="red",
+        bg="whhite",
+    )
     click.secho("Save your work before terminating.", bold=True, fg="red", bg="whhite")
