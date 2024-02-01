@@ -1,5 +1,6 @@
 PYTHONPATH="{{ python_path }}"
 PIPPATH="{{ pip_path }}"
+SOARDIR="{{ soar_dir }}"
 SOARPATH="{{ soar_path }}"
 WORKSPACEPATH="{{ workspace_path }}"
 STORAGEPATH="{{ storage_path }}"
@@ -17,6 +18,8 @@ alias .....="cd ../../../.."
 # Shortcuts
 alias mystorage="echo $STORAGEPATH"
 alias gohome="cd $WORKSPACEPATH"
+alias soarhome="cd $SOARDIR"
+alias soardir="cd $SOARDIR"
 
 # List all files colorized in long format
 alias l="ls -lF ${colorflag}"

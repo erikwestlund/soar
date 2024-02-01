@@ -124,7 +124,7 @@ def get_default_config_location():
 def get_default_jhed():
     try:
         with open(get_soar_path(".jhed_username"), "r") as f:
-            return f.read()
+            return f.read().strip()
     except FileNotFoundError:
         return ""
 
