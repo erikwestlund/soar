@@ -122,8 +122,9 @@ def get_default_config_location():
 
 
 def get_default_jhed():
+    temp_jhed_username_path = Path(__file__).parent / ".jhed_username"
     try:
-        with open(get_soar_path(".jhed_username"), "r") as f:
+        with open(temp_jhed_username_path, "r") as f:
             return f.read().strip()
     except FileNotFoundError:
         return ""
@@ -186,7 +187,7 @@ def run_reset_keyring(ctx):
     )
 
 
-def set_config(self, update=False):
+def run_set_config(self, update=False):
     config = get_config()
     password_updated = False
     changes_made = False
@@ -205,9 +206,8 @@ def set_config(self, update=False):
         click.secho("Blank answers will not be recorded.", fg="yellow")
 
     # Set JHED if not set or update is True
-    jhed_username_default = (
-        config["credentials"]["jhed"]["username"] or get_default_jhed()
-    )
+    jhed_username_default = config["credentials"]["jhed"]["username"] or get_default_jhed()
+    
     if first_run or update or not config["credentials"]["jhed"]["username"]:
         config["credentials"]["jhed"]["username"] = click.prompt(
             "Enter your JHED (without @jh.edu)",

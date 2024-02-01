@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 
 import click
@@ -19,6 +20,16 @@ from config import (
     get_user_storage_path,
     get_zshrc_path,
 )
+
+import rpy2.robjects.packages as rpackages
+from rpy2.rinterface_lib.callbacks import logger as rpy2_logger
+
+rpy2_logger.setLevel(logging.ERROR)
+rstudioapi = rpackages.importr("rstudioapi")
+
+def reload_rstudio_preferences():
+    rstudioapi.readPreference()
+    rstudioapi.readRStudioPreference()
 
 
 def run_enhance_shell(ctx):
