@@ -13,8 +13,10 @@ settings:
   paths:
     python: /usr/local/bin/python3.10
     pip: /usr/local/bin/pip3.10
+    home: /home/idies
+    rstudio_config: /home/idies/.config
     workspace: /home/idies/workspace
-    home: /home/idies/workspace/home
+    home_storage: /home/idies/workspace/home
     storage_parent: /home/idies/workspace/Storage/persistent
   volumes:
     user_home: //mtwfs.nas.jh.edu/HOME

@@ -21,11 +21,13 @@ def generate_config_yaml(config):
         yaml.dump(config, file)
 
 
-def get_aliases_path(config):
+def get_aliases_path():
+    config = get_config()
     return f"{config['settings']['paths']['home']}/.aliases"
 
 
-def get_bashrc_path(config):
+def get_bashrc_path():
+    config = get_config()
     return f"{config['settings']['paths']['home']}/.bashrc"
 
 
@@ -68,23 +70,32 @@ def get_default_config_location():
     return get_config_location(default=True)
 
 
-def get_rstudio_keybindings_path(config):
+def get_rstudio_config_path():
+    config = get_config()
+    return f"{config['settings']['paths']['rstudio_config']}"
+
+
+def get_rstudio_keybindings_path():
+    config = get_config()
     return f"{config['settings']['paths']['home']}/.config/rstudio/keybindings/editor_bindings.json"
 
 
-def get_soar_dir(config):
-    return get_user_storage_path(config) + "/soar"
+def get_soar_dir():
+    config = get_config()
+    return get_user_storage_path() + "/soar"
 
 
-def get_soar_path(config, path):
-    return f"{get_soar_dir(config)}/{path}"
+def get_soar_path(path):
+    config = get_config()
+    return f"{get_soar_dir()}/{path}"
 
 
-def get_soar_program_path(config):
-    return get_soar_dir(config) + "/soar.py"
+def get_soar_program_path():
+    return get_soar_dir() + "/soar.py"
 
 
-def get_user_storage_path(config):
+def get_user_storage_path():
+    config = get_config()
     return (
         config["settings"]["paths"]["storage_parent"]
         + "/"
@@ -92,7 +103,8 @@ def get_user_storage_path(config):
     )
 
 
-def get_zshrc_path(config):
+def get_zshrc_path():
+    config = get_config()
     return f"{config['settings']['paths']['home']}/.zshrc"
 
 
