@@ -2,14 +2,14 @@ import os
 
 import click
 
-from config import check_config, get_config
+from config import check_config_with_password, get_config
 from credentials import (
     get_password,
 )
 
 
 def run_mount_home(ctx):
-    if not check_config():
+    if not check_config_with_password():
         click.secho("Exiting.", fg="red", bold=True)
         exit(1)
 
@@ -28,7 +28,7 @@ def run_mount_home(ctx):
 
 
 def run_mount_safe(ctx):
-    if not check_config():
+    if not check_config_with_password():
         click.secho("Exiting.", fg="red", bold=True)
         exit(1)
 

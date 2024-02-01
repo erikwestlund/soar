@@ -16,7 +16,12 @@ from credentials import (
 keyring = rpackages.importr("keyring")
 
 
-def check_config(config=None):
+def check_config_with_password(config=None):
+    config = config if config else get_config()
+    return check_config(config, True)
+
+
+def check_config(config=None, check_password=False):
     config = config if config else get_config()
 
     if not config["configured"]:
@@ -39,26 +44,37 @@ def check_config(config=None):
         unlock_keyring()
         click.secho("Unlocked the keyring.", fg="green")
 
-    jhed_password_set = user_has_jhed_password(
-        config["credentials"]["jhed"]["username"]
-    )
-    if not jhed_password_set:
-        click.secho(
-            "JHED password not set. Run configure before proceeding.",
-            fg="red",
-            bold=True,
+    if check_password:
+        jhed_password_set = user_has_jhed_password(
+            config["credentials"]["jhed"]["username"]
         )
-        return False
+        if not jhed_password_set:
+            click.secho(
+                "JHED password not set. Run configure before proceeding.",
+                fg="red",
+                bold=True,
+            )
+            return False
 
     return True
+
+
 def generate_config_yaml(config):
     with open(get_config_location(), "w") as file:
         yaml.dump(config, file)
 
 
-def get_aliases_path():
+def get_aliases_home_path():
     config = get_config()
     return f"{config['settings']['paths']['home']}/.aliases"
+
+
+def get_aliases_template_path():
+    return f"{get_resources_path()}/shell/.aliases"
+
+
+def get_resources_path():
+    return f"{get_soar_dir()}/resources"
 
 
 def get_bashrc_path():
@@ -253,5 +269,3 @@ def set_config(self, update=False):
 def write_config(config):
     with open(get_config_location(), "w") as file:
         yaml.dump(config, file)
-
-

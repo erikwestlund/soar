@@ -6,7 +6,8 @@ from jinja2 import Template
 
 from config import (
     check_config,
-    get_aliases_path,
+    get_aliases_template_path,
+    get_aliases_home_path,
     get_bashrc_path,
     get_config,
     get_rstudio_config_path,
@@ -55,7 +56,7 @@ def run_install_aliases(ctx, install_bash=True, install_zsh=True):
     click.secho("Installing quick aliases...")
     config = get_config()
 
-    with open(get_aliases_path(), "r") as f:
+    with open(get_aliases_template_path(), "r") as f:
         template = Template(f.read())
 
     aliases = template.render(
@@ -67,7 +68,7 @@ def run_install_aliases(ctx, install_bash=True, install_zsh=True):
     )
 
     # write to ~/.aliases
-    aliases_location = get_aliases_path()
+    aliases_location = get_aliases_home_path()
     with open(aliases_location, "w") as f:
         f.write(aliases)
 
