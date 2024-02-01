@@ -16,10 +16,9 @@ sudo yum -y remove mssql-tools unixODBC-utf16-devel
 export ACCEPT_EULA='y'
 sudo yum -y install mssql-tools unixODBC-devel
 
-echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bash_profile
-echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.zshrc
-echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
-source ~/.bashrc
+echo export PATH="/opt/mssql-tools/bin:$PATH" >> ~/.bash_profile
+echo export PATH="/opt/mssql-tools/bin:$PATH" >> ~/.zshrc
+echo export PATH="/opt/mssql-tools/bin:$PATH" >> ~/.bashrc
 
 # Install Python 3.10
 mkdir -p /home/idies/workspace/python310
@@ -39,7 +38,6 @@ echo export PATH="/usr/local/bin/python3.10:$PATH" >> ~/.bashrc
 echo export PATH="/usr/local/bin/pip3.10:$PATH" >> ~/.bash_profile
 echo export PATH="/usr/local/bin/pip3.10:$PATH" >> ~/.zshrc
 echo export PATH="/usr/local/bin/pip3.10:$PATH" >> ~/.bashrc
-source ~/.bashrc
 
 sudo ln -fs /usr/local/bin/python3.10 /usr/bin/python3
 sudo ln -fs /usr/local/bin/pip3.10 /usr/bin/pip3
@@ -56,14 +54,12 @@ rm -rf "$STORAGE_DIR/soar"
 git clone https://github.com/erikwestlund/soar.git "$STORAGE_DIR/soar"
 
 # Make aliases permanent
-echo "alias soar=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.bash_profile
-echo "alias soar=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.zshrc
-echo "alias soar=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.bashrc
-echo "alias crunchr=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.bash_profile
-echo "alias crunchr=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.zshrc
-echo "alias crunchr=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.bashrc
-
-source ~/.bashrc
+echo alias soar="python3 $STORAGE_DIR/soar/soar.py" >> ~/.bash_profile
+echo alias soar="python3 $STORAGE_DIR/soar/soar.py" >> ~/.zshrc
+echo alias soar="python3 $STORAGE_DIR/soar/soar.py" >> ~/.bashrc
+echo alias crunchr="python3 $STORAGE_DIR/soar/soar.py" >> ~/.bash_profile
+echo alias crunchr="python3 $STORAGE_DIR/soar/soar.py" >> ~/.zshrc
+echo alias crunchr="python3 $STORAGE_DIR/soar/soar.py" >> ~/.bashrc
 
 # Store the jhed username in a temporary file to load it on first run
 echo $JHED_USERNAME > $STORAGE_DIR/soar/.jhed_username

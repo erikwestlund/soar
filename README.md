@@ -15,7 +15,7 @@ This package is a CLI helper for the Johns Hopkins University Crunchr platform. 
 Install the tool by running this command from the terminal. In an RStudio instance, you can paste this into the terminal:
 
 ```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/erikwestlund/soar/master/install.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/erikwestlund/soar/master/install.sh)" && source ~/.bashrc
 ```
 
 ## Package Information
