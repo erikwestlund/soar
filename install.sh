@@ -54,12 +54,12 @@ rm -rf "$STORAGE_DIR/soar"
 git clone https://github.com/erikwestlund/soar.git "$STORAGE_DIR/soar"
 
 # Make aliases permanent
-echo alias soar="python3 $STORAGE_DIR/soar/soar.py" >> ~/.bash_profile
-echo alias soar="python3 $STORAGE_DIR/soar/soar.py" >> ~/.zshrc
-echo alias soar="python3 $STORAGE_DIR/soar/soar.py" >> ~/.bashrc
-echo alias crunchr="python3 $STORAGE_DIR/soar/soar.py" >> ~/.bash_profile
-echo alias crunchr="python3 $STORAGE_DIR/soar/soar.py" >> ~/.zshrc
-echo alias crunchr="python3 $STORAGE_DIR/soar/soar.py" >> ~/.bashrc
+echo "alias soar="python3 $STORAGE_DIR/soar/soar.py" >> ~/.bash_profile
+echo "alias soar="python3 $STORAGE_DIR/soar/soar.py" >> ~/.zshrc
+echo "alias soar="python3 $STORAGE_DIR/soar/soar.py" >> ~/.bashrc
+echo "alias crunchr="python3 $STORAGE_DIR/soar/soar.py" >> ~/.bash_profile
+echo "alias crunchr="python3 $STORAGE_DIR/soar/soar.py" >> ~/.zshrc
+echo "alias crunchr="python3 $STORAGE_DIR/soar/soar.py" >> ~/.bashrc
 
 # Store the jhed username in a temporary file to load it on first run
 echo $JHED_USERNAME > $STORAGE_DIR/soar/.jhed_username
