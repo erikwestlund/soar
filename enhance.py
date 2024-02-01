@@ -13,8 +13,7 @@ import os
 
 
 def run_enhance_shell(ctx):
-    click.secho("Installing ZSH...")
-    click.secho("Installing Oh My Zsh...")
+    click.secho("Enhancing your shell with Zsh and OhMyZsh...")
     click.secho("Installing quick aliases...")
     click.secho("✅ Done.", fg="green")
 
