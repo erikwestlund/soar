@@ -26,7 +26,7 @@ def run_enhance_shell(ctx):
 
     click.secho("Enhancing your shell with Zsh and OhMyZsh...")
     install_script = get_soar_path("resources/shell/enhance.sh")
-    os.system("zsh " + install_script)
+    os.system("sh " + install_script)
 
     click.secho("Installing quick aliases...")
     run_install_aliases(ctx, install_bash=False, install_zsh=True)
