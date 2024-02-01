@@ -13,10 +13,11 @@ def run_mount_home(ctx):
         click.secho("Exiting.", fg="red", bold=True)
         exit(1)
 
+    click.secho("Mounting Home directory. This may take a moment.")
     config = get_config()
     jhed_password = get_password(config["credentials"]["jhed"]["username"])
 
-    home_dir = config["settings"]["paths"]["home"]
+    home_dir = config["settings"]["paths"]["home_storage"]
     os.makedirs(home_dir, exist_ok=True)
 
     chown_string = f"sudo chown -R idies:idies {home_dir}"
@@ -32,6 +33,8 @@ def run_mount_safe(ctx):
     if not check_config_with_password():
         click.secho("Exiting.", fg="red", bold=True)
         exit(1)
+
+    click.secho("Mounting SAFE directory. This may take a moment.")
 
     config = get_config()
     jhed_password = get_password(config["credentials"]["jhed"]["username"])
