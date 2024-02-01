@@ -134,4 +134,7 @@ def run_install_rstudio_keybindings(ctx):
     os.system(
         f"cp {rstudio_keybindings_template_path} {rstudio_keybindings_system_path}"
     )
+
+    rstudioapi.restartSession()
+
     click.secho("✅ Done.", fg="green")
