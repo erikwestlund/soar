@@ -12,6 +12,7 @@ from config import (
     get_config,
     get_resources_path,
     get_rstudio_config_path,
+    get_rstudio_keybindings_dir,
     get_rstudio_keybindings_path,
     get_soar_path,
     get_soar_program_path,
@@ -103,8 +104,12 @@ def run_install_rstudio_keybindings(ctx):
     click.secho("Installing enhanced RStudio keybindings...")
     config = get_config()
 
-    rstudio_keybindings_template_path = get_resources_path() + "/rstudio/editor_bindings.json"
+    rstudio_keybindings_template_path = (
+        get_resources_path() + "/rstudio/editor_bindings.json"
+    )
     rstudio_keybindings_system_path = get_rstudio_keybindings_path()
-    os.makedirs(rstudio_keybindings_system_path, exist_ok=True)
-    os.system(f"cp {rstudio_keybindings_template_path} {rstudio_keybindings_system_path}")
+    os.makedirs(get_rstudio_keybindings_dir(), exist_ok=True)
+    os.system(
+        f"cp {rstudio_keybindings_template_path} {rstudio_keybindings_system_path}"
+    )
     click.secho("✅ Done.", fg="green")

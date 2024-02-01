@@ -36,7 +36,11 @@ def unlock_keyring():
         keyring.keyring_unlock()
     except Exception as e:
         click.secho("💣 Failed to unlock the keyring. Aborting.", fg="red", bold=True)
-        click.secho("If you cannot remember your password, rRun \"soar reset-keyring\" to delete your \nkeyring and start over. Your saved credentials will be lost.", fg="red", bold=True)
+        click.secho(
+            'If you cannot remember your password, rRun "soar reset-keyring" to delete your \nkeyring and start over. Your saved credentials will be lost.',
+            fg="red",
+            bold=True,
+        )
         exit(1)
 
 
@@ -46,5 +50,3 @@ def user_has_jhed_password(jhed_username):
         return True
     except:
         return False
-
-

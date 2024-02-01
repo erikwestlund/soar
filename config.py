@@ -134,9 +134,12 @@ def get_rstudio_config_path():
     return f"{config['settings']['paths']['rstudio_config']}"
 
 
+def get_rstudio_keybindings_dir():
+    return f"{get_rstudio_config_path()}/keybindings"
+
+
 def get_rstudio_keybindings_path():
-    config = get_config()
-    return f"{get_rstudio_config_path()}/keybindings/editor_bindings.json"
+    return f"{get_rstudio_keybindings_dir()}/editor_bindings.json"
 
 
 def get_soar_dir():
@@ -170,14 +173,17 @@ def get_zshrc_path():
     return f"{config['settings']['paths']['home']}/.zshrc"
 
 
-
 def run_reset_keyring(ctx):
     config = get_config()
     click.secho("🔑 Resetting your keyring...", fg="red", bold=True)
     os.system(f"rm -rf {config['settings']['paths']['rstudio_keyring']}/system.keyring")
-    os.system(f"rm -rf {config['settings']['paths']['rstudio_keyring']}/system.keyring.lck")
+    os.system(
+        f"rm -rf {config['settings']['paths']['rstudio_keyring']}/system.keyring.lck"
+    )
     click.secho("✅ Keyring reset.", fg="green", bold=True)
-    click.secho("Run \"soar configure -u\" to set your credentials again.", fg="green", bold=True)
+    click.secho(
+        'Run "soar configure -u" to set your credentials again.', fg="green", bold=True
+    )
 
 
 def set_config(self, update=False):
@@ -199,7 +205,9 @@ def set_config(self, update=False):
         click.secho("Blank answers will not be recorded.", fg="yellow")
 
     # Set JHED if not set or update is True
-    jhed_username_default = config["credentials"]["jhed"]["username"] or get_default_jhed()
+    jhed_username_default = (
+        config["credentials"]["jhed"]["username"] or get_default_jhed()
+    )
     if first_run or update or not config["credentials"]["jhed"]["username"]:
         config["credentials"]["jhed"]["username"] = click.prompt(
             "Enter your JHED (without @jh.edu)",
@@ -214,7 +222,9 @@ def set_config(self, update=False):
     if first_run or update or not jhed_password_set:
         current_password = get_password(config["credentials"]["jhed"]["username"])
 
-        jhed_password = click.prompt("Enter your JHED password", hide_input=True).strip()
+        jhed_password = click.prompt(
+            "Enter your JHED password", hide_input=True
+        ).strip()
 
         if jhed_password != "":
             set_keyring_password(
