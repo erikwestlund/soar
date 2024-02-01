@@ -183,7 +183,7 @@ def set_config(self, update=False):
         config["credentials"]["jhed"]["username"] = click.prompt(
             "Enter your JHED (without @jh.edu)",
             default=config["credentials"]["jhed"]["username"],
-        )
+        ).strip()
         changes_made = True
 
     # Set JHED password if not set or update is True
@@ -193,7 +193,7 @@ def set_config(self, update=False):
     if first_run or update or not jhed_password_set:
         current_password = get_password(config["credentials"]["jhed"]["username"])
 
-        jhed_password = click.prompt("Enter your JHED password", hide_input=True)
+        jhed_password = click.prompt("Enter your JHED password", hide_input=True).strip()
 
         if jhed_password != "":
             set_keyring_password(
@@ -206,7 +206,7 @@ def set_config(self, update=False):
         config["credentials"]["github"]["username"] = click.prompt(
             "Enter your GitHub username",
             default=config["credentials"]["github"]["username"],
-        )
+        ).strip()
         changes_made = True
 
     # Set GitHub email if not set or update is True
@@ -214,7 +214,7 @@ def set_config(self, update=False):
         config["credentials"]["github"]["email"] = click.prompt(
             "Enter the email address associated with your GitHub username",
             default=config["credentials"]["github"]["email"],
-        )
+        ).strip()
 
     # Set GitHub core editor if not set or update is True
     if first_run or update or not config["settings"]["github"]["core_editor"]:
@@ -228,7 +228,7 @@ def set_config(self, update=False):
         option = click.prompt(
             "Enter your preferred text editor for Git (1=nano, 2=vi, 3=emacs)",
             default=default_editor_number,
-        )
+        ).strip()
 
         if option == 1:
             config["settings"]["github"]["core_editor"] = "nano"
@@ -246,7 +246,7 @@ def set_config(self, update=False):
         config["settings"]["github"]["default_branch"] = click.prompt(
             "Enter the default branch of your projects.",
             default=config["settings"]["github"]["default_branch"],
-        )
+        ).strip()
 
         changes_made = True
 
