@@ -47,7 +47,7 @@ sudo ln -fs /usr/local/bin/pip3.10 /usr/bin/pip3
 
 # Install dependencies needed by Soar
 pip3 install keyring click pyyaml black rpy2 sh jinja2
-Rscript -e "install.packages('keyring')"
+R -e "install.packages('keyring')"
 
 # Install Soar
 STORAGE_DIR="/home/idies/workspace/Storage/$JHED_USERNAME/persistent"
@@ -62,6 +62,9 @@ echo "alias soar=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.bashrc
 echo "alias crunchr=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.bash_profile
 echo "alias crunchr=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.zshrc
 echo "alias crunchr=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.bashrc
+
+# Store the jhed username in a temporary file to load it on first run
+echo $JHED_USERNAME > $STORAGE_DIR/soar/.jhed_username
 
 # Create alias for use now.
 alias soar="python3 $STORAGE_DIR/soar/soar.py"
