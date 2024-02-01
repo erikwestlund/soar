@@ -40,11 +40,11 @@ def check_config(config=None, check_password=False):
         )
         return False
 
-    if keyring_is_locked():
-        unlock_keyring()
-        click.secho("Unlocked the keyring.", fg="green")
-
     if check_password:
+        if keyring_is_locked():
+            unlock_keyring()
+            click.secho("Unlocked the keyring.", fg="green")
+
         jhed_password_set = user_has_jhed_password(
             config["credentials"]["jhed"]["username"]
         )
