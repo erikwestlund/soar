@@ -123,7 +123,7 @@ def run_install_rstudio_keybindings(ctx):
     rstudio_keybindings_template_path = (
         get_resources_path() + "/rstudio/rstudio_bindings.json"
     )
-    
+
     rstudio_editor_keybindings_system_path = get_rstudio_editor_keybindings_path()
     rstudio_keybindings_system_path = get_rstudio_keybindings_path()
 
