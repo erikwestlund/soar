@@ -22,7 +22,7 @@ sudo yum -y install mssql-tools unixODBC-devel
 # Update Git to a recent version (installed version is 1.8 from 2013)
 sudo yum -y remove git
 sudo yum -y install https://repo.ius.io/ius-release-el7.rpm
-sudo yum -y install git2u
+sudo yum -y install git236
 
 # Install Python 3.10
 mkdir -p /home/idies/workspace/python310

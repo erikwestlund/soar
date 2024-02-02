@@ -14,5 +14,9 @@
     "movelinesdown": "Shift+Down",
     "movelinesup": "Shift+Up",
     "selectdown": "",
-    "selectup": ""
+    "selectup": "",
+    "selecttolinestart": "Ctrl+Shift+Left",
+    "selectwordleft": "",
+    "selectlineend": "Ctrl+Shift+Right",
+    "selectwordright": ""
 }
