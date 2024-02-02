@@ -10,7 +10,7 @@ from enhance import (
     run_install_rstudio_keybindings,
     run_install_aliases,
 )
-from install import run_install_r_data_science_tools, run_install_r_ohdsi_tools
+from install import run_install_r_data_science_tools, run_install_r_data_analysis_tools , run_install_r_ohdsi_tools
 from make import make_kerberos_auth
 from mount import run_mount_home, run_mount_safe
 from status import get_status
@@ -69,14 +69,21 @@ def install(ctx):
 @install.command("r-data-science")
 @click.pass_context
 def install_r_data_science(ctx):
-    """Install R Data Science tools such as the Tidyverse and connection utilities."""
+    """R data science tools: Tidyverse, database utilities, etc."""
     run_install_r_data_science_tools(ctx)
+
+
+@install.command("r-data-analysis")
+@click.pass_context
+def install_r_data_science(ctx):
+    """R data analysis tools: multilevel modeling,  Bayesian analysis, etc."""
+    run_install_r_data_analysis_tools(ctx)
 
 
 @install.command("r-ohdsi")
 @click.pass_context
 def install_r_ohdsi_tools(ctx):
-    """Install R OHDSI tools."""
+    """R OHDSI tools."""
     run_install_r_ohdsi_tools(ctx)
 
 
