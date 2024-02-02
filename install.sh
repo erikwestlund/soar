@@ -94,5 +94,10 @@ echo "source ~/.soarrc" >> ~/.bashrc
 # Store the jhed username in a temporary file to load it on first run
 echo $JHED_USERNAME > $STORAGE_DIR/soar/.jhed_username
 
+# If the config.yml exists in the users soar directory, copy it to the workspace dir
+if [ -f "$STORAGE_DIR/soar/config.yml" ]; then
+    cp $STORAGE_DIR/soar/config.yml /home/idies/workspace/config.yml
+fi
+
 echo "🎉 Installation complete!"
 echo "Type \"crunchr configure\" to use Soar."
