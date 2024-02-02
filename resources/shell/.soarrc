@@ -1,3 +1,10 @@
+PYTHONPATH="{{ python_path }}"
+PIPPATH="{{ pip_path }}"
+SOARDIR="{{ soar_dir }}"
+SOARPATH="{{ soar_path }}"
+WORKSPACEPATH="{{ workspace_path }}"
+STORAGEPATH="{{ storage_path }}"
+
 alias updatesoar="cd $STORAGE_DIR/soar && git reset --hard HEAD && git pull && soar configure -r"
 alias soarupdate="cd $STORAGE_DIR/soar && git reset --hard HEAD && git pull && soar configure -r"
 

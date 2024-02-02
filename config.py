@@ -4,15 +4,10 @@ from pathlib import Path
 import click
 import rpy2.robjects.packages as rpackages
 import yaml
+from jinja2 import Template
 
-from credentials import (
-    get_password,
-    keyring_is_locked,
-    set_keyring_password,
-    unlock_keyring,
-    user_has_jhed_password,
-    user_has_github_pat
-)
+from credentials import (get_password, keyring_is_locked, set_keyring_password, unlock_keyring, user_has_github_pat,
+                         user_has_jhed_password)
 
 keyring = rpackages.importr("keyring")
 
@@ -68,6 +63,11 @@ def generate_config_yaml(config):
 def get_aliases_home_path():
     config = get_config()
     return f"{config['settings']['paths']['home']}/.aliases"
+
+
+def get_soarrc_path():
+    config = get_config()
+    return f"{config['settings']['paths']['home']}/.soarrc"
 
 
 def get_aliases_template_path():
@@ -184,6 +184,41 @@ def get_zshrc_path():
     return f"{config['settings']['paths']['home']}/.zshrc"
 
 
+def install_soarrc():
+    config = get_config()
+
+    soarrc_template_path = get_resources_path() + "/shell/.soarrc"
+    with open(soarrc_template_path, "r") as f:
+        template = Template(f.read())
+
+    soarrc = template.render(
+        python_path=config["settings"]["paths"]["python"],
+        pip_path=config["settings"]["paths"]["pip"],
+        soar_dir=get_soar_dir(),
+        soar_path=get_soar_program_path(),
+        workspace_path=config["settings"]["paths"]["workspace"],
+        storage_path=get_user_storage_path(),
+    )
+
+    # write to ~/.aliases
+    soarrc_location = get_soarrc_path()
+    with open(soarrc_location, "w") as f:
+        f.write(soarrc)
+
+    # install to bash and zsh to make permanent
+    source_string = f"source {soarrc_location}"
+    bashrc_path = get_bashrc_path()
+    zshrc_path = get_zshrc_path()
+
+    with open(bashrc_path, "a+") as f:
+        if source_string not in f.read():
+            f.write(f"\n{source_string}")
+
+    with open(zshrc_path, "a+") as f:
+        if source_string not in f.read():
+            f.write(f"\n{source_string}")
+
+
 def run_copy_config(ctx):
     config = get_config()
     new_location = get_workspace_dir() + "/config.yml"
@@ -202,6 +237,8 @@ def run_refresh_config(ctx):
     write_config(refreshed_config)
 
     click.secho("✅ Configuration refreshed.", fg="green", bold=True)
+
+    install_soarrc()
 
 
 
@@ -373,6 +410,8 @@ def run_set_config(self, update=False):
             "No changes made. To update your config, run configure with the -u flag.",
             fg="yellow",
         )
+
+    install_soarrc()
 
 
 def write_config(config):

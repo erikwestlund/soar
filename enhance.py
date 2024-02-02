@@ -24,11 +24,6 @@ from config import (
 )
 
 
-def reload_rstudio_preferences():
-    rstudioapi.readPreference()
-    rstudioapi.readRStudioPreference()
-
-
 def run_enhance_shell(ctx):
     if not check_config():
         click.secho("Exiting.", fg="red", bold=True)
