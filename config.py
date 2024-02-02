@@ -206,6 +206,8 @@ def run_set_config(self, update=False):
     else:
         click.secho("Update Crunchr Configuration.", fg="green")
 
+    click.secho("Note: To paste text into the RStudio terminal, right click and select paste.", fg="yellow")
+
     if keyring_is_locked():
         unlock_keyring()
         click.secho("Unlocked the keyring.", fg="green")
@@ -323,7 +325,7 @@ def run_set_config(self, update=False):
         if github_pat != "":
             set_keyring_password(
                 "github",
-                config["credentials"]["jhed"]["username"],
+                config["credentials"]["github"]["username"],
                 github_pat
             )
             pat_updated = True
