@@ -16,7 +16,7 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
 # Shortcuts
-alias mystorage="echo $STORAGEPATH"
+alias mystorage="cd $STORAGEPATH"
 alias gohome="cd $WORKSPACEPATH"
 alias soarhome="cd $SOARDIR"
 alias soardir="cd $SOARDIR"

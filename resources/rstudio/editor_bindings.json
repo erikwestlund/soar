@@ -11,12 +11,14 @@
     "findnext": "",
     "copylinesdown": "Ctrl+Shift+D",
     "duplicateSelection": "",
-    "movelinesdown": "Shift+Down",
-    "movelinesup": "Shift+Up",
+    "movelinesdown": "Ctrl+Shift+Down",
+    "movelinesup": "Ctrl+Shift+Up",
     "selectdown": "",
     "selectup": "",
     "selecttolinestart": "Ctrl+Shift+Left",
     "selectwordleft": "",
     "selectlineend": "Ctrl+Shift+Right",
-    "selectwordright": ""
+    "selectwordright": "",
+    "modifyNumberDown": "",
+    "modifyNumberUp": ""
 }

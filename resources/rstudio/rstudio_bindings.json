@@ -1,5 +1,7 @@
 {
     "quickAddNext": "Ctrl+D",
     "roxygenizePackage": "",
-    "yankAfterCursor": ""
+    "yankAfterCursor": "",
+    "expandSelection": "Shift+Up",
+    "shrinkSelection": "Shift+Down"
 }
