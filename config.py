@@ -187,9 +187,11 @@ def get_zshrc_path():
 def run_copy_config(ctx):
     config = get_config()
     new_location = get_workspace_dir() + "/config.yml"
+
+    print(f"cp {get_soar_dir()}/config.yml {new_location}")
     os.system(f"cp {get_soar_dir()}/config.yml {new_location}")
     click.secho("✅ Configuration copied to:", fg="green", bold=True)
-    click.secho(new_location, fg="yellow", bold=True)
+    click.secho(new_location, fg="yellow")
 
 
 def run_refresh_config(ctx):

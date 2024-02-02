@@ -87,9 +87,9 @@ def copy(ctx):
     """Copy files to useful locations."""
 
 
-@install.command("config")
+@copy.command("config")
 @click.pass_context
-def install_r_data_science(ctx):
+def copy_config(ctx):
     """Copies your config.yml to your home directory."""
     run_copy_config(ctx)
 
