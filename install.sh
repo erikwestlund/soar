@@ -7,7 +7,8 @@ read -p "Enter your JHED: " JHED_USERNAME
 # Install packages required
 sudo yum -y install \
             libsecret libsodium-devel openssl-devel bzip2-devel libffi-devel epel zsh nano \
-            openssl11-devel dbus-devel sqlite-devel krb5-server krb5-libs krb5-workstation
+            openssl11-devel dbus-devel sqlite-devel krb5-server krb5-libs krb5-workstation \
+            epel-release
 
 # Setup MsSql Tools
 curl https://packages.microsoft.com/config/rhel/8/prod.repo -o /tmp/msprod.repo
@@ -17,6 +18,11 @@ rm /tmp/msprod.repo
 sudo yum -y remove mssql-tools unixODBC-utf16-devel
 export ACCEPT_EULA='y'
 sudo yum -y install mssql-tools unixODBC-devel
+
+# Update Git to a recent version (installed version is 1.8 from 2013)
+yum -y remove git
+rpm -U https://centos7.iuscommunity.org/ius-release.rpm
+yum -y install git2u
 
 # Install Python 3.10
 mkdir -p /home/idies/workspace/python310
