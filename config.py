@@ -220,7 +220,7 @@ def install_soarrc():
             f.write(f"\n{source_string}")
 
 
-def run_copy_config(ctx):
+def run_copy_config():
     config = get_config()
     new_location = get_workspace_dir() + "/config.yml"
 
@@ -413,6 +413,7 @@ def run_set_config(self, update=False):
         )
 
     install_soarrc()
+    run_copy_config()
 
 
 def write_config(config):

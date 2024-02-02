@@ -91,7 +91,7 @@ def copy(ctx):
 @click.pass_context
 def copy_config(ctx):
     """Copies your config.yml to your home directory."""
-    run_copy_config(ctx)
+    run_copy_config()
 
 
 @main.group()
