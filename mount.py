@@ -15,13 +15,13 @@ def run_mount_home(ctx):
 
     click.secho("Mounting Home directory. This may take a moment.")
     config = get_config()
-    jhed_password = get_password("jhed", config["credentials"]["jhed"]["username"])
+    jhed_password = get_password("jhed", config["default"]["credentials"]["jhed"]["username"])
 
-    home_dir = config["settings"]["paths"]["home_storage"]
+    home_dir = config["default"]["settings"]["paths"]["home_storage"]
     os.makedirs(home_dir, exist_ok=True)
 
     chown_string = f"sudo chown -R idies:idies {home_dir}"
-    mount_string = f"sudo mount -t cifs {config['settings']['volumes']['user_home']} {home_dir} -o username={config['credentials']['jhed']['username']},workgroup=win,uid=idies,password={jhed_password}"
+    mount_string = f"sudo mount -t cifs {config['default']['settings']['volumes']['user_home']} {home_dir} -o username={config['credentials']['jhed']['username']},workgroup=win,uid=idies,password={jhed_password}"
 
     os.system(chown_string)
     os.system(mount_string)
@@ -35,7 +35,7 @@ def run_mount_safe(ctx):
         exit(1)
 
     config = get_config()
-    jhed_password = get_password("jhed", config["credentials"]["jhed"]["username"])
+    jhed_password = get_password("jhed", config["default"]["credentials"]["jhed"]["username"])
 
     project_name = click.prompt(
         "Enter the name of the SAFE volume as it appears on the S drive (e.g., 'jhbc_camp')",
@@ -43,11 +43,11 @@ def run_mount_safe(ctx):
     )
 
     click.secho("Mounting SAFE directory. This may take a moment.")
-    safe_dir = f"{config['settings']['paths']['workspace']}/{project_name}"
+    safe_dir = f"{config['default']['settings']['paths']['workspace']}/{project_name}"
     os.makedirs(safe_dir, exist_ok=True)
 
     chown_string = f"sudo chown -R idies:idies {safe_dir}"
-    mount_string = f"sudo mount -t cifs {config['settings']['volumes']['s_drive']}/{project_name} {safe_dir} -o username={config['credentials']['jhed']['username']},workgroup=win,uid=idies,password={jhed_password}"
+    mount_string = f"sudo mount -t cifs {config['default']['settings']['volumes']['s_drive']}/{project_name} {safe_dir} -o username={config['credentials']['jhed']['username']},workgroup=win,uid=idies,password={jhed_password}"
 
     os.system(chown_string)
     os.system(mount_string)

@@ -28,7 +28,7 @@ def check_config(config=None, check_password=False):
         )
         return False
 
-    if not config["credentials"]["jhed"]["username"]:
+    if not config["default"]["credentials"]["jhed"]["username"]:
         click.secho(
             "JHED username not set. Run configure before proceeding.",
             fg="red",
@@ -42,7 +42,7 @@ def check_config(config=None, check_password=False):
             click.secho("Unlocked the keyring.", fg="green")
 
         jhed_password_set = user_has_jhed_password(
-            config["credentials"]["jhed"]["username"]
+            config["default"]["credentials"]["jhed"]["username"]
         )
         if not jhed_password_set:
             click.secho(
@@ -62,12 +62,12 @@ def generate_config_yaml(config):
 
 def get_aliases_home_path():
     config = get_config()
-    return f"{config['settings']['paths']['home']}/.aliases"
+    return f"{config['default']['settings']['paths']['home']}/.aliases"
 
 
 def get_soarrc_path():
     config = get_config()
-    return f"{config['settings']['paths']['home']}/.soarrc"
+    return f"{config['default']['settings']['paths']['home']}/.soarrc"
 
 
 def get_aliases_template_path():
@@ -80,7 +80,7 @@ def get_resources_path():
 
 def get_bashrc_path():
     config = get_config()
-    return f"{config['settings']['paths']['home']}/.bashrc"
+    return f"{config['default']['settings']['paths']['home']}/.bashrc"
 
 
 def get_config():
@@ -103,8 +103,8 @@ def get_config():
     # Return compatible config with default values filled in
     full_config = default_config | config
 
-    if full_config["credentials"]["jhed"]["username"]:
-        full_config["settings"]["paths"]["storage"] = get_user_storage_path(full_config)
+    if full_config["default"]["credentials"]["jhed"]["username"]:
+        full_config["default"]["settings"]["paths"]["storage"] = get_user_storage_path(full_config)
 
     return full_config
 
@@ -133,7 +133,7 @@ def get_default_jhed():
 
 def get_rstudio_config_path():
     config = get_config()
-    return f"{config['settings']['paths']['rstudio_config']}"
+    return f"{config['default']['settings']['paths']['rstudio_config']}"
 
 
 def get_rstudio_keybindings_dir():
@@ -163,25 +163,25 @@ def get_soar_program_path():
 def get_user_storage_path(config=None):
     config = config if config else get_config()
 
-    if not config["credentials"]["jhed"]["username"]:
-        return config["settings"]["paths"]["storage_parent"]
+    if not config["default"]["credentials"]["jhed"]["username"]:
+        return config["default"]["settings"]["paths"]["storage_parent"]
 
     return (
-        config["settings"]["paths"]["storage_parent"]
+        config["default"]["settings"]["paths"]["storage_parent"]
         + "/"
-        + config["credentials"]["jhed"]["username"]
+        + config["default"]["credentials"]["jhed"]["username"]
         + "/persistent"
     )
 
 
 def get_workspace_dir():
     config = get_config()
-    return f"{config['settings']['paths']['workspace']}"
+    return f"{config['default']['settings']['paths']['workspace']}"
 
 
 def get_zshrc_path():
     config = get_config()
-    return f"{config['settings']['paths']['home']}/.zshrc"
+    return f"{config['default']['settings']['paths']['home']}/.zshrc"
 
 
 def install_soarrc():
@@ -192,11 +192,11 @@ def install_soarrc():
         template = Template(f.read())
 
     soarrc = template.render(
-        python_path=config["settings"]["paths"]["python"],
-        pip_path=config["settings"]["paths"]["pip"],
+        python_path=config["default"]["settings"]["paths"]["python"],
+        pip_path=config["default"]["settings"]["paths"]["pip"],
         soar_dir=get_soar_dir(),
         soar_path=get_soar_program_path(),
-        workspace_path=config["settings"]["paths"]["workspace"],
+        workspace_path=config["default"]["settings"]["paths"]["workspace"],
         storage_path=get_user_storage_path(),
     )
 
@@ -246,9 +246,9 @@ def run_refresh_config(ctx):
 def run_reset_keyring(ctx):
     config = get_config()
     click.secho("🔑 Resetting your keyring...", fg="red", bold=True)
-    os.system(f"rm -rf {config['settings']['paths']['rstudio_keyring']}/system.keyring")
+    os.system(f"rm -rf {config['default']['settings']['paths']['rstudio_keyring']}/system.keyring")
     os.system(
-        f"rm -rf {config['settings']['paths']['rstudio_keyring']}/system.keyring.lck"
+        f"rm -rf {config['default']['settings']['paths']['rstudio_keyring']}/system.keyring.lck"
     )
     click.secho("✅ Keyring reset.", fg="green", bold=True)
     click.secho(
@@ -281,11 +281,11 @@ def run_set_config(self, update=False):
 
     # Set JHED if not set or update is True
     jhed_username_default = (
-        config["credentials"]["jhed"]["username"] or get_default_jhed()
+        config["default"]["credentials"]["jhed"]["username"] or get_default_jhed()
     )
 
-    if first_run or update or not config["credentials"]["jhed"]["username"]:
-        config["credentials"]["jhed"]["username"] = click.prompt(
+    if first_run or update or not config["default"]["credentials"]["jhed"]["username"]:
+        config["default"]["credentials"]["jhed"]["username"] = click.prompt(
             "Enter your JHED (without @jh.edu)",
             default=jhed_username_default or "",
             show_default=True if jhed_username_default else False
@@ -294,10 +294,10 @@ def run_set_config(self, update=False):
 
     # Set JHED password if not set or update is True
     jhed_password_set = user_has_jhed_password(
-        config["credentials"]["jhed"]["username"]
+        config["default"]["credentials"]["jhed"]["username"]
     )
     if first_run or update or not jhed_password_set:
-        current_password = get_password("jhed", config["credentials"]["jhed"]["username"])
+        current_password = get_password("jhed", config["default"]["credentials"]["jhed"]["username"])
         click.secho("Your JHED password is required for mounting volumes and interacting with other JHU-related resources.", fg="yellow")
         click.secho("This password will be securely stored in the system keyring.", fg="yellow")
         jhed_password = click.prompt(
@@ -310,35 +310,35 @@ def run_set_config(self, update=False):
         if jhed_password != "":
             set_keyring_password(
                 "jhed",
-                config["credentials"]["jhed"]["username"],
+                config["default"]["credentials"]["jhed"]["username"],
                 jhed_password
             )
             password_updated = True
 
     # Set GitHub username if not set or update is True
-    if first_run or update or not config["credentials"]["github"]["username"]:
-        config["credentials"]["github"]["username"] = click.prompt(
+    if first_run or update or not config["default"]["credentials"]["github"]["username"]:
+        config["default"]["credentials"]["github"]["username"] = click.prompt(
             "Enter your GitHub username",
-            default=config["credentials"]["github"]["username"] or "",
-            show_default=True if config["credentials"]["github"]["username"] else False
+            default=config["default"]["credentials"]["github"]["username"] or "",
+            show_default=True if config["default"]["credentials"]["github"]["username"] else False
         ).strip()
         changes_made = True
 
     # Set GitHub email if not set or update is True
-    if first_run or update or not config["credentials"]["github"]["email"]:
-        config["credentials"]["github"]["email"] = click.prompt(
+    if first_run or update or not config["default"]["credentials"]["github"]["email"]:
+        config["default"]["credentials"]["github"]["email"] = click.prompt(
             "Enter the email address associated with your GitHub username",
-            default=config["credentials"]["github"]["email"] or "",
-            show_default=True if config["credentials"]["github"]["email"] else False
+            default=config["default"]["credentials"]["github"]["email"] or "",
+            show_default=True if config["default"]["credentials"]["github"]["email"] else False
         ).strip()
 
     # Set GitHub core editor if not set or update is True
-    if first_run or update or not config["settings"]["github"]["core_editor"]:
+    if first_run or update or not config["default"]["settings"]["github"]["core_editor"]:
         default_editor_number = (
             1
-            if config["settings"]["github"]["core_editor"] == "nano"
+            if config["default"]["settings"]["github"]["core_editor"] == "nano"
             else 2
-            if config["settings"]["github"]["core_editor"] == "vi"
+            if config["default"]["settings"]["github"]["core_editor"] == "vi"
             else 3
         )
         option = click.prompt(
@@ -347,32 +347,32 @@ def run_set_config(self, update=False):
         )
 
         if option == 1:
-            config["settings"]["github"]["core_editor"] = "nano"
+            config["default"]["settings"]["github"]["core_editor"] = "nano"
         elif option == 2:
-            config["settings"]["github"]["core_editor"] = "vi"
+            config["default"]["settings"]["github"]["core_editor"] = "vi"
         elif option == 3:
-            config["settings"]["github"]["core_editor"] = "emacs"
+            config["default"]["settings"]["github"]["core_editor"] = "emacs"
         else:
-            config["settings"]["github"]["core_editor"] = "nano"
+            config["default"]["settings"]["github"]["core_editor"] = "nano"
 
         changes_made = True
 
     # Set GitHub default branch
-    if first_run or update or not config["settings"]["github"]["default_branch"]:
-        config["settings"]["github"]["default_branch"] = click.prompt(
+    if first_run or update or not config["default"]["settings"]["github"]["default_branch"]:
+        config["default"]["settings"]["github"]["default_branch"] = click.prompt(
             "Enter the default branch of your projects.",
-            default=config["settings"]["github"]["default_branch"] or "",
-            show_default=True if config["settings"]["github"]["default_branch"] else False
+            default=config["default"]["settings"]["github"]["default_branch"] or "",
+            show_default=True if config["default"]["settings"]["github"]["default_branch"] else False
         ).strip()
 
         changes_made = True
 
     # Set Github Personal Access Token
     github_pat_set = user_has_github_pat(
-        config["credentials"]["github"]["username"]
+        config["default"]["credentials"]["github"]["username"]
     )
     if first_run or update or not github_pat_set:
-        current_pat = get_password("github", config["credentials"]["github"]["username"])
+        current_pat = get_password("github", config["default"]["credentials"]["github"]["username"])
 
         click.secho("To push and pull from JHU organization GitHub repositories, you will need a Personal Access Token (PAT).", fg="yellow")
         click.secho("This token will be securely stored in your keyring and used to authenticate with GitHub.", fg="yellow")
@@ -389,7 +389,7 @@ def run_set_config(self, update=False):
         if github_pat != "":
             set_keyring_password(
                 "github",
-                config["credentials"]["github"]["username"],
+                config["default"]["credentials"]["github"]["username"],
                 github_pat
             )
             pat_updated = True
