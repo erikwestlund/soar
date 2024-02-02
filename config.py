@@ -289,7 +289,7 @@ def run_set_config(self, update=False):
             "Enter your JHED (without @jh.edu)",
             default=jhed_username_default or "",
             show_default=True if jhed_username_default else False
-        ).strip()
+        ).strip() or None
         changes_made = True
 
     # Set JHED password if not set or update is True
@@ -321,7 +321,7 @@ def run_set_config(self, update=False):
             "Enter your GitHub username",
             default=config["default"]["credentials"]["github"]["username"] or "",
             show_default=True if config["default"]["credentials"]["github"]["username"] else False
-        ).strip()
+        ).strip() or None
         changes_made = True
 
     # Set GitHub email if not set or update is True
@@ -330,7 +330,7 @@ def run_set_config(self, update=False):
             "Enter the email address associated with your GitHub username",
             default=config["default"]["credentials"]["github"]["email"] or "",
             show_default=True if config["default"]["credentials"]["github"]["email"] else False
-        ).strip()
+        ).strip() or None
 
     # Set GitHub core editor if not set or update is True
     if first_run or update or not config["default"]["settings"]["github"]["core_editor"]:
@@ -363,7 +363,7 @@ def run_set_config(self, update=False):
             "Enter the default branch of your projects.",
             default=config["default"]["settings"]["github"]["default_branch"] or "",
             show_default=True if config["default"]["settings"]["github"]["default_branch"] else False
-        ).strip()
+        ).strip() or None
 
         changes_made = True
 
@@ -384,7 +384,7 @@ def run_set_config(self, update=False):
             hide_input=True,
             default="",
             show_default=False
-        ).strip()
+        ).strip() or None
 
         if github_pat != "":
             set_keyring_password(
