@@ -23,7 +23,7 @@ def run_mount_home(ctx):
     os.makedirs(home_dir, exist_ok=True)
 
     chown_string = f"sudo chown -R idies:idies {home_dir}"
-    mount_string = f"sudo mount -t cifs {config['default']['settings']['volumes']['user_home']} {home_dir} -o username={config['credentials']['jhed']['username']},workgroup=win,uid=idies,password={jhed_password}"
+    mount_string = f"sudo mount -t cifs {config['default']['settings']['volumes']['user_home']} {home_dir} -o username={config['default']['credentials']['jhed']['username']},workgroup=win,uid=idies,password={jhed_password}"
 
     os.system(chown_string)
     os.system(mount_string)
@@ -51,7 +51,7 @@ def run_mount_safe(ctx):
     os.makedirs(safe_dir, exist_ok=True)
 
     chown_string = f"sudo chown -R idies:idies {safe_dir}"
-    mount_string = f"sudo mount -t cifs {config['default']['settings']['volumes']['s_drive']}/{project_name} {safe_dir} -o username={config['credentials']['jhed']['username']},workgroup=win,uid=idies,password={jhed_password}"
+    mount_string = f"sudo mount -t cifs {config['default']['settings']['volumes']['s_drive']}/{project_name} {safe_dir} -o username={config['default']['credentials']['jhed']['username']},workgroup=win,uid=idies,password={jhed_password}"
 
     os.system(chown_string)
     os.system(mount_string)
