@@ -5,10 +5,10 @@ SOARPATH="{{ soar_path }}"
 WORKSPACEPATH="{{ workspace_path }}"
 STORAGEPATH="{{ storage_path }}"
 
-alias updatesoar="cd $STORAGE_DIR/soar && git reset --hard HEAD && git pull && soar configure -r"
-alias soarupdate="cd $STORAGE_DIR/soar && git reset --hard HEAD && git pull && soar configure -r"
+alias updatesoar="cd $SOARDIR && git reset --hard HEAD && git pull && $PYTHONPATH $SOARPATH configure -r"
+alias soarupdate="cd $SOARDIR && git reset --hard HEAD && git pull && $PYTHONPATH $SOARPATH configure -r"
 
-alias refreshconfig="sour configure -r"
+alias refreshconfig="$PYTHONPATH $SOARPATH configure -r"
 
-alias copyconfig="soar copy config"
-alias configcopy="soar copy config"
+alias copyconfig="$PYTHONPATH $SOARPATH copy config"
+alias configcopy="$PYTHONPATH $SOARPATH copy config"
