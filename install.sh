@@ -20,9 +20,9 @@ export ACCEPT_EULA='y'
 sudo yum -y install mssql-tools unixODBC-devel
 
 # Update Git to a recent version (installed version is 1.8 from 2013)
-yum -y remove git
-rpm -U https://centos7.iuscommunity.org/ius-release.rpm
-yum -y install git2u
+sudo yum -y remove git
+sudo rpm -U https://centos7.iuscommunity.org/ius-release.rpm
+sudo yum -y install git2u
 
 # Install Python 3.10
 mkdir -p /home/idies/workspace/python310
