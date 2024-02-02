@@ -72,9 +72,21 @@ Rscript -e "install.packages('config', repos='https://cran.rstudio.com/')"
 
 # Install Soar
 STORAGE_DIR="/home/idies/workspace/Storage/$JHED_USERNAME/persistent"
+
+# Backup old config if it exists.
 mkdir -p $STORAGE_DIR
+if [ -f "$STORAGE_DIR/soar/config.yml" ]; then
+    cp $STORAGE_DIR/soar/config.yml $STORAGE_DIR/config.yml.bak
+fi
+
+# Install fresh.
 rm -rf "$STORAGE_DIR/soar"
 git clone https://github.com/erikwestlund/soar.git "$STORAGE_DIR/soar"
+
+# Copy the old config back if it exists.
+if [ -f "$STORAGE_DIR/config.yml.bak" ]; then
+    cp $STORAGE_DIR/config.yml.bak $STORAGE_DIR/soar/config.yml
+fi
 
 # Add aliases that work regardless of user configuration
 echo "alias soar=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.bash_profile
