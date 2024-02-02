@@ -9,9 +9,9 @@ rpy2_logger.setLevel(logging.ERROR)
 keyring = rpackages.importr("keyring")
 
 
-def get_password(username):
+def get_password(keyring_name, username):
     try:
-        return keyring.key_get("jhed", username)[0]
+        return keyring.key_get(keyring_name, username)[0]
     except:
         return None
 
@@ -20,8 +20,8 @@ def keyring_is_locked():
     return keyring.keyring_is_locked()[0]
 
 
-def set_keyring_password(jhed_username, jhed_password):
-    keyring.key_set_with_value("jhed", jhed_username, jhed_password)
+def set_keyring_password(keyring_name, jhed_username, jhed_password):
+    keyring.key_set_with_value(keyring_name, jhed_username, jhed_password)
 
 
 def unlock_keyring():
@@ -47,6 +47,14 @@ def unlock_keyring():
 def user_has_jhed_password(jhed_username):
     try:
         keyring.key_get("jhed", jhed_username)
+        return True
+    except:
+        return False
+
+
+def user_has_github_pat(github_username):
+    try:
+        keyring.key_get("github", github_username)
         return True
     except:
         return False

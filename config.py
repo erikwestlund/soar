@@ -11,6 +11,7 @@ from credentials import (
     set_keyring_password,
     unlock_keyring,
     user_has_jhed_password,
+    user_has_github_pat
 )
 
 keyring = rpackages.importr("keyring")
@@ -194,6 +195,7 @@ def run_reset_keyring(ctx):
 def run_set_config(self, update=False):
     config = get_config()
     password_updated = False
+    pat_updated = False
     changes_made = False
 
     first_run = not config["configured"]
@@ -201,6 +203,8 @@ def run_set_config(self, update=False):
     if first_run:
         click.secho("Welcome to CrunchR!", fg="green")
         click.secho("Let's get started by configuring your container.", fg="green")
+    else:
+        click.secho("Update Crunchr Configuration.", fg="green")
 
     if keyring_is_locked():
         unlock_keyring()
@@ -218,6 +222,7 @@ def run_set_config(self, update=False):
         config["credentials"]["jhed"]["username"] = click.prompt(
             "Enter your JHED (without @jh.edu)",
             default=jhed_username_default or "",
+            show_default=True if jhed_username_default else False
         ).strip()
         changes_made = True
 
@@ -226,15 +231,21 @@ def run_set_config(self, update=False):
         config["credentials"]["jhed"]["username"]
     )
     if first_run or update or not jhed_password_set:
-        current_password = get_password(config["credentials"]["jhed"]["username"])
-
+        current_password = get_password("jhed", config["credentials"]["jhed"]["username"])
+        click.secho("Your JHED password is required for mounting volumes and interacting with other JHU-related resources.", fg="yellow")
+        click.secho("This password will be securely stored in the system keyring.", fg="yellow")
         jhed_password = click.prompt(
-            "Enter your JHED password", hide_input=True
+            "Enter your JHED password",
+            hide_input=True,
+            default="",
+            show_default=False
         ).strip()
 
         if jhed_password != "":
             set_keyring_password(
-                config["credentials"]["jhed"]["username"], jhed_password
+                "jhed",
+                config["credentials"]["jhed"]["username"],
+                jhed_password
             )
             password_updated = True
 
@@ -242,7 +253,8 @@ def run_set_config(self, update=False):
     if first_run or update or not config["credentials"]["github"]["username"]:
         config["credentials"]["github"]["username"] = click.prompt(
             "Enter your GitHub username",
-            default=config["credentials"]["github"]["username"],
+            default=config["credentials"]["github"]["username"] or "",
+            show_default=True if config["credentials"]["github"]["username"] else False
         ).strip()
         changes_made = True
 
@@ -250,7 +262,8 @@ def run_set_config(self, update=False):
     if first_run or update or not config["credentials"]["github"]["email"]:
         config["credentials"]["github"]["email"] = click.prompt(
             "Enter the email address associated with your GitHub username",
-            default=config["credentials"]["github"]["email"],
+            default=config["credentials"]["github"]["email"] or "",
+            show_default=True if config["credentials"]["github"]["email"] else False
         ).strip()
 
     # Set GitHub core editor if not set or update is True
@@ -282,10 +295,38 @@ def run_set_config(self, update=False):
     if first_run or update or not config["settings"]["github"]["default_branch"]:
         config["settings"]["github"]["default_branch"] = click.prompt(
             "Enter the default branch of your projects.",
-            default=config["settings"]["github"]["default_branch"],
+            default=config["settings"]["github"]["default_branch"] or "",
+            show_default=True if config["settings"]["github"]["default_branch"] else False
         ).strip()
 
         changes_made = True
+
+    # Set Github Personal Access Token
+    github_pat_set = user_has_github_pat(
+        config["credentials"]["github"]["username"]
+    )
+    if first_run or update or not github_pat_set:
+        current_pat = get_password("github", config["credentials"]["github"]["username"])
+
+        click.secho("To push and pull from JHU organization GitHub repositories, you will need a Personal Access Token (PAT).", fg="yellow")
+        click.secho("This token will be securely stored in your keyring and used to authenticate with GitHub.", fg="yellow")
+        click.secho("This PAT will need to be authorized by the relevant SSO organization (e.g., JH-inHealth, OHDSI-JHU.)", fg="yellow")
+        click.secho("Directions on how to do this are available here:", fg="yellow")
+        click.secho("https://docs.github.com/en/enterprise-cloud@latest/authentication/authenticating-with-saml-single-sign-on/authorizing-a-personal-access-token-for-use-with-saml-single-sign-on", fg="magenta")
+        github_pat = click.prompt(
+            "Enter the GitHub Personal Access Token you will use for this container. ",
+            hide_input=True,
+            default="",
+            show_default=False
+        ).strip()
+
+        if github_pat != "":
+            set_keyring_password(
+                "github",
+                config["credentials"]["jhed"]["username"],
+                github_pat
+            )
+            pat_updated = True
 
     config["configured"] = True
 
@@ -293,6 +334,9 @@ def run_set_config(self, update=False):
 
     if password_updated:
         click.secho("Password updated.", fg="green")
+
+    if pat_updated:
+        click.secho("GitHub PAT updated.", fg="green")
 
     if changes_made:
         click.secho("✅ Configuration saved to config.yml.", fg="green")

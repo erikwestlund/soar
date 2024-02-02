@@ -15,7 +15,7 @@ def run_mount_home(ctx):
 
     click.secho("Mounting Home directory. This may take a moment.")
     config = get_config()
-    jhed_password = get_password(config["credentials"]["jhed"]["username"])
+    jhed_password = get_password("jhed", config["credentials"]["jhed"]["username"])
 
     home_dir = config["settings"]["paths"]["home_storage"]
     os.makedirs(home_dir, exist_ok=True)
@@ -35,7 +35,7 @@ def run_mount_safe(ctx):
         exit(1)
 
     config = get_config()
-    jhed_password = get_password(config["credentials"]["jhed"]["username"])
+    jhed_password = get_password("jhed", config["credentials"]["jhed"]["username"])
 
     project_name = click.prompt(
         "Enter the name of the SAFE volume as it appears on the S drive (e.g., 'jhbc_camp')",
