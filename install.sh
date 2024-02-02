@@ -98,5 +98,5 @@ echo "source ~/.soarrc" >> ~/.bashrc
 # Store the jhed username in a temporary file to load it on first run
 echo $JHED_USERNAME > $STORAGE_DIR/soar/.jhed_username
 
-echo "Installation complete."
+echo "🎉 Installation complete!"
 echo "Type \"crunchr configure\" to use Soar."
