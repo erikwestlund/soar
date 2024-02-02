@@ -149,7 +149,7 @@ def get_rstudio_keybindings_path():
 
 
 def get_soar_dir():
-    return get_user_storage_path() + "/soar"
+    return Path(__file__).parent
 
 
 def get_soar_path(path):
@@ -157,7 +157,7 @@ def get_soar_path(path):
 
 
 def get_soar_program_path():
-    return get_soar_dir() + "/soar.py"
+    return get_soar_dir() / "/soar.py"
 
 
 def get_user_storage_path(config=None):
@@ -202,6 +202,7 @@ def install_soarrc():
 
     # write to ~/.aliases
     soarrc_location = get_soarrc_path()
+    os.makedirs(os.path.dirname(soarrc_location), exist_ok=True)
     with open(soarrc_location, "w") as f:
         f.write(soarrc)
 

@@ -75,6 +75,7 @@ def run_install_aliases(ctx, install_bash=True, install_zsh=True):
 
     # write to ~/.aliases
     aliases_location = get_aliases_home_path()
+    os.makedirs(os.path.dirname(aliases_location), exist_ok=True)
     with open(aliases_location, "w") as f:
         f.write(aliases)
 
