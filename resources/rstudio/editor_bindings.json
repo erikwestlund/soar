@@ -11,8 +11,8 @@
     "findnext": "",
     "copylinesdown": "Ctrl+Shift+D",
     "duplicateSelection": "",
-    "movelinesdown": "Ctrl+Shift+Down",
-    "movelinesup": "Ctrl+Shift+Up",
+    "movelinesdown": "Alt+Shift+Down",
+    "movelinesup": "Alt+Shift+Up",
     "selectdown": "",
     "selectup": "",
     "selecttolinestart": "Ctrl+Shift+Left",
@@ -20,5 +20,6 @@
     "selectlineend": "Ctrl+Shift+Right",
     "selectwordright": "",
     "modifyNumberDown": "",
-    "modifyNumberUp": ""
+    "modifyNumberUp": "",
+    "copylinesup": ""
 }
