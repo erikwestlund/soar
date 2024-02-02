@@ -61,7 +61,6 @@ echo "export PATH=\"$PATH\"" >> ~/.bash_profile
 echo "export PATH=\"$PATH\"" >> ~/.zshrc
 echo "export PATH=\"$PATH\"" >> ~/.bashrc
 
-
 sudo ln -fs /usr/local/bin/python3.10 /usr/bin/python3
 sudo ln -fs /usr/local/bin/pip3.10 /usr/bin/pip3
 /usr/local/bin/python3.10 -m pip install --upgrade pip

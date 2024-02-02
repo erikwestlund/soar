@@ -1,5 +1,10 @@
 import click
-from config import run_copy_config, run_refresh_config, run_reset_keyring, run_set_config
+from config import (
+    run_copy_config,
+    run_refresh_config,
+    run_reset_keyring,
+    run_set_config,
+)
 from enhance import (
     run_enhance_shell,
     run_install_rstudio_keybindings,
@@ -35,7 +40,7 @@ def main(ctx):
 )
 def configure(ctx, update, refresh=False):
     """Configure your CrunchR container."""
-    if(refresh):
+    if refresh:
         run_refresh_config(ctx)
     else:
         run_set_config(ctx, update)
