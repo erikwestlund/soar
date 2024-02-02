@@ -174,9 +174,33 @@ def get_user_storage_path(config=None):
     )
 
 
+def get_workspace_dir():
+    config = get_config()
+    return f"{config['settings']['paths']['workspace']}"
+
+
 def get_zshrc_path():
     config = get_config()
     return f"{config['settings']['paths']['home']}/.zshrc"
+
+
+def run_copy_config(ctx):
+    config = get_config()
+    new_location = get_workspace_dir() + "/config.yml"
+    os.system(f"cp {get_soar_dir()}/config.yml {new_location}")
+    click.secho("✅ Configuration copied to:", fg="green", bold=True)
+    click.secho(new_location, fg="yellow", bold=True)
+
+
+def run_refresh_config(ctx):
+    config = get_config()
+    click.secho("Refreshing your configuration...", fg="red", bold=True)
+
+    refreshed_config = get_default_config() | config
+    write_config(refreshed_config)
+
+    click.secho("✅ Configuration refreshed.", fg="green", bold=True)
+
 
 
 def run_reset_keyring(ctx):

@@ -1,5 +1,5 @@
 import click
-from config import run_reset_keyring, run_set_config
+from config import run_copy_config, run_refresh_config, run_reset_keyring, run_set_config
 from enhance import (
     run_enhance_shell,
     run_install_rstudio_keybindings,
@@ -26,9 +26,19 @@ def main(ctx):
     show_default=True,
     help="Update all configuration items. Default is to update only empty values.",
 )
-def configure(ctx, update):
+@click.option(
+    "--refresh",
+    "-r",
+    is_flag=True,
+    show_default=True,
+    help="Refresh config to ensure it has all default values.",
+)
+def configure(ctx, update, refresh=False):
     """Configure your CrunchR container."""
-    run_set_config(ctx, update)
+    if(refresh):
+        run_refresh_config(ctx)
+    else:
+        run_set_config(ctx, update)
 
 
 @main.command()
@@ -48,7 +58,7 @@ def reset_keyring(ctx):
 @main.group()
 @click.pass_context
 def install(ctx):
-    """Install useful packages and softare."""
+    """Install useful packages and software."""
 
 
 @install.command("r-data-science")
@@ -63,6 +73,25 @@ def install_r_data_science(ctx):
 def install_r_ohdsi_tools(ctx):
     """Install R OHDSI tools."""
     run_install_r_ohdsi_tools(ctx)
+
+
+@main.group()
+@click.pass_context
+def mount(ctx):
+    """Mount network volumes on your container."""
+
+
+@main.group()
+@click.pass_context
+def copy(ctx):
+    """Copy files to useful locations."""
+
+
+@install.command("config")
+@click.pass_context
+def install_r_data_science(ctx):
+    """Copies your config.yml to your home directory."""
+    run_copy_config(ctx)
 
 
 @main.group()

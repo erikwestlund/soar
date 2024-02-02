@@ -1,0 +1,7 @@
+alias updatesoar="cd $STORAGE_DIR/soar && git reset --hard HEAD && git pull && soar configure -r"
+alias soarupdate="cd $STORAGE_DIR/soar && git reset --hard HEAD && git pull && soar configure -r"
+
+alias refreshconfig="sour configure -r"
+
+alias copyconfig="soar copy config"
+alias configcopy="soar copy config"
