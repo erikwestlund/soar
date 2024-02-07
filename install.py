@@ -11,7 +11,7 @@ def run_install_r_data_science_tools(ctx):
     click.secho("This may take a while.", fg="green")
 
     script = get_resources_path() + "/install/r-data-science.sh"
-    os.system("sh " + script)
+    os.system("/bin/sh " + script)
 
     click.secho("✅ Done.", fg="green")
 
@@ -22,7 +22,7 @@ def run_install_r_data_analysis_tools(ctx):
     click.secho("This may take a while.", fg="green")
 
     script = get_resources_path() + "/install/r-data-analysis.sh"
-    os.system("sh " + script)
+    os.system("/bin/sh " + script)
 
     click.secho("✅ Done.", fg="green")
 
@@ -32,7 +32,7 @@ def run_install_r_ohdsi_tools(ctx):
     click.secho("🔧 Installing OHDSI Tools...", fg="green", bold=True)
     click.secho("This may take a while.", fg="green")
 
-    script = get_resources_path() + "/install/r-data-science.sh"
-    os.system("sh " + script)
+    script = get_resources_path() + "/install/r-ohdsi.sh"
+    os.system("/bin/sh " + script)
 
     click.secho("✅ Done.", fg="green")

@@ -178,10 +178,12 @@ def project(ctx):
 
 
 @project.command("configure")
+@click.argument("project_id", required=False)
 @click.pass_context
-def configure_project(ctx):
-    """Configure a project."""
-    run_configure_project(ctx)
+def configure_project(ctx, project_id):
+    """Configure your project."""
+
+    run_configure_project(ctx, project_id)
 
 
 if __name__ == "__main__":

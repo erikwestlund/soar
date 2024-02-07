@@ -1,9 +1,19 @@
-from config import get_config, get_config_location, get_is_configured
+from config import run_copy_config, get_config, get_config_location, get_is_configured
 import click
 import yaml
 
 
-def run_configure_project(ctx):
+def get_all_project_ids():
+    config = get_config()
+    return list(filter(lambda x: x != "default", list(config.keys())))
+
+
+def project_exists(project_id):
+    config = get_config()
+    return project_id in config.keys()
+
+
+def run_configure_project(ctx, project_id=None):
     """Configure your project."""
 
     if not get_is_configured():
@@ -17,13 +27,29 @@ def run_configure_project(ctx):
         )
         exit(1)
 
+    if project_id and not project_exists(project_id):
+        click.secho(
+            f"The project ID {project_id} does not exist. Please create it first.",
+            fg="red",
+            bold=True,
+        )
+        exit(1)
+
     config = get_config()
 
-    click.secho(
-        "Below you will be prompted to enter information about your project.",
-        fg="green",
-        bold=True,
-    )
+    if project_id:
+        click.secho(
+            "Below you will be prompted to enter information about your project.",
+            fg="green",
+            bold=True,
+        )
+    else:
+        click.secho(
+            "Below you can update information about your project.",
+            fg="green",
+            bold=True,
+        )
+
     click.secho(
         "Default values can be accepted when they are shown in brackets.",
         fg="white",
@@ -35,17 +61,27 @@ def run_configure_project(ctx):
         bold=True,
     )
 
-    # default_project_id = filter(list(config.keys()), lambda x: x != "default")
-    default_project_id = ""
-    project_id = click.prompt(
-        'Give the project a string ID (e.g., "project_name")',
-        type=str,
-        default=default_project_id,
-        show_default=bool(default_project_id),
-    ).strip()
+    existing_project_ids = get_all_project_ids()
+
+    if not project_id:
+        click.secho(
+            "Entering an existing project ID will allow you to update the settings.",
+            fg="white",
+        )
+
+        default_project_id = (
+            existing_project_ids[0] if existing_project_ids else "project_name"
+        )
+
+        project_id = click.prompt(
+            'Give the project a string ID (e.g., "project_name")',
+            type=str,
+            default=default_project_id,
+            show_default=bool(default_project_id),
+        ).strip()
 
     project_data = config.get(project_id, {})
-    project_exists = bool(project_data)
+    provided_project_exists = bool(project_data)
     defaults = project_data.get("settings", {})
 
     default_name = defaults.get("name", "")
@@ -56,7 +92,7 @@ def run_configure_project(ctx):
         show_default=bool(default_name),
     ).strip()
 
-    default_irb_number = defaults.get("irb_number", "")
+    default_irb_number = defaults.get("irb_number", "") or ""
     irb_number = click.prompt(
         "Enter the IRB number (e.g.,  IRBXXXX) if you know it",
         type=str,
@@ -64,7 +100,7 @@ def run_configure_project(ctx):
         show_default=bool(default_irb_number),
     ).strip()
 
-    default_db_driver = defaults.get("db_driver", "FreeTDS")
+    default_db_driver = defaults.get("db_driver", "FreeTDS") or ""
     db_driver = click.prompt(
         "Enter the ODBC database driver",
         type=str,
@@ -73,7 +109,7 @@ def run_configure_project(ctx):
     ).strip()
 
     if db_driver == "FreeTDS":
-        default_db_tds_version = defaults.get("db_tds_version", "8.0")
+        default_db_tds_version = defaults.get("db_tds_version", "8.0") or ""
         db_tds_version = click.prompt(
             "Enter the TDS version",
             type=str,
@@ -81,7 +117,7 @@ def run_configure_project(ctx):
             show_default=bool(default_db_tds_version),
         ).strip()
 
-    default_db_server = defaults.get("db_server", "")
+    default_db_server = defaults.get("db_server", "") or ""
     db_server = click.prompt(
         "Enter the database server (e.g., XXXX.jhu.edu)",
         type=str,
@@ -89,7 +125,7 @@ def run_configure_project(ctx):
         show_default=bool(default_db_server),
     ).strip()
 
-    default_db_port = defaults.get("db_port", 1433)
+    default_db_port = defaults.get("db_port", 1433) or ""
     db_port = click.prompt(
         "Enter the database port",
         type=int,
@@ -97,7 +133,7 @@ def run_configure_project(ctx):
         show_default=bool(default_db_port),
     )
 
-    default_projection_name = defaults.get("projection_name", "")
+    default_projection_name = defaults.get("projection_name", "") or ""
     projection_name = click.prompt(
         "Enter the projection database name",
         type=str,
@@ -105,7 +141,7 @@ def run_configure_project(ctx):
         show_default=bool(default_projection_name),
     ).strip()
 
-    default_scratch_name = defaults.get("scratch_name", "")
+    default_scratch_name = defaults.get("scratch_name", "") or ""
     scratch_name = click.prompt(
         "Enter the scratch database name",
         type=str,
@@ -113,7 +149,7 @@ def run_configure_project(ctx):
         show_default=bool(default_scratch_name),
     ).strip()
 
-    default_scratch_schema_name = defaults.get("scratch_schema_name", "dbo")
+    default_scratch_schema_name = defaults.get("scratch_schema_name", "dbo") or ""
     scratch_schema_name = click.prompt(
         "Enter the scratch schema name",
         type=str,
@@ -121,7 +157,7 @@ def run_configure_project(ctx):
         show_default=bool(default_scratch_schema_name),
     ).strip()
 
-    default_safe_folder_name = defaults.get("safe_folder_name", "")
+    default_safe_folder_name = defaults.get("safe_folder_name", "") or ""
     safe_folder_name = click.prompt(
         "Enter the SAFE Folder name",
         type=str,
@@ -142,7 +178,7 @@ def run_configure_project(ctx):
         "safe_folder_name": safe_folder_name or None,
     }
 
-    if project_exists:
+    if provided_project_exists:
         # Merge with any existing settings
         project_settings = defaults | new_settings
         config[project_id]["settings"] = project_settings
@@ -151,3 +187,5 @@ def run_configure_project(ctx):
 
     with open(get_config_location(), "w") as file:
         yaml.dump(config, file)
+
+    run_copy_config()
