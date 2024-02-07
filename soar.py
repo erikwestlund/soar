@@ -10,9 +10,14 @@ from enhance import (
     run_install_rstudio_keybindings,
     run_install_aliases,
 )
-from install import run_install_r_data_science_tools, run_install_r_data_analysis_tools , run_install_r_ohdsi_tools
+from install import (
+    run_install_r_data_science_tools,
+    run_install_r_data_analysis_tools,
+    run_install_r_ohdsi_tools,
+)
 from make import make_kerberos_auth
 from mount import run_mount_home, run_mount_safe
+from project import run_configure_project
 from status import get_status
 
 
@@ -156,7 +161,7 @@ def https_sync(ctx):
 @main.group()
 @click.pass_context
 def make(ctx):
-    """Make files using templates for various tasks, such as authorization to databases."""
+    """Make files using templates (e.g., database config files)."""
 
 
 @make.command("kerberos-auth")
@@ -164,6 +169,19 @@ def make(ctx):
 def enhance_shell(ctx):
     """Create a kerberos auth template."""
     make_kerberos_auth(ctx)
+
+
+@main.group()
+@click.pass_context
+def project(ctx):
+    """Project tools (e.g., configuring database credentials)."""
+
+
+@project.command("configure")
+@click.pass_context
+def configure_project(ctx):
+    """Configure a project."""
+    run_configure_project(ctx)
 
 
 if __name__ == "__main__":

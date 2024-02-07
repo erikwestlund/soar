@@ -21,7 +21,9 @@ keyring = rpackages.importr("keyring")
 def check_config(config=None, check_password=False):
     config = config if config else get_config()
 
-    if not config["configured"]:
+    is_configured = get_is_configured()
+
+    if not is_configured:
         click.secho(
             "Configuration not set. Run configure before proceeding.",
             fg="red",
@@ -117,6 +119,13 @@ def get_default_config():
         return yaml.load(file, Loader=yaml.FullLoader)
 
 
+def get_is_configured():
+    default_config = get_default_config()
+    config = get_config()
+
+    return default_config != config
+
+
 def get_default_config_location():
     return get_config_location(default=True)
 
@@ -210,32 +219,40 @@ def install_soarrc():
 
     # write to ~/.aliases
     soarrc_location = get_soarrc_path()
-    os.makedirs(os.path.dirname(soarrc_location), exist_ok=True)
-    with open(soarrc_location, "w") as f:
-        f.write(soarrc)
 
-    # install to bash and zsh to make permanent
-    source_string = f"source {soarrc_location}"
-    bashrc_path = get_bashrc_path()
-    zshrc_path = get_zshrc_path()
+    if os.path.exists(soarrc_location):
+        os.makedirs(os.path.dirname(soarrc_location), exist_ok=True)
+        with open(soarrc_location, "w") as f:
+            f.write(soarrc)
 
-    with open(bashrc_path, "a+") as f:
-        if source_string not in f.read():
-            f.write(f"\n{source_string}")
+        # install to bash and zsh to make permanent
+        source_string = f"source {soarrc_location}"
+        bashrc_path = get_bashrc_path()
+        zshrc_path = get_zshrc_path()
 
-    with open(zshrc_path, "a+") as f:
-        if source_string not in f.read():
-            f.write(f"\n{source_string}")
+        with open(bashrc_path, "a+") as f:
+            if source_string not in f.read():
+                f.write(f"\n{source_string}")
+
+        with open(zshrc_path, "a+") as f:
+            if source_string not in f.read():
+                f.write(f"\n{source_string}")
+    else:
+        click.secho(
+            "⚠️ This looks like a non-CrunchR platform. Cannot write all config files because default config paths do not exist.",
+            fg="yellow",
+            bold=True,
+        )
 
 
 def run_copy_config():
     config = get_config()
     new_location = get_workspace_dir() + "/config.yml"
 
-    print(f"cp {get_soar_dir()}/config.yml {new_location}")
-    os.system(f"cp {get_soar_dir()}/config.yml {new_location}")
-    click.secho("✅ Configuration copied to:", fg="green", bold=True)
-    click.secho(new_location, fg="yellow")
+    if os.path.exists(get_workspace_dir()):
+        os.system(f"cp {get_soar_dir()}/config.yml {new_location}")
+        click.secho("✅ Configuration copied to:", fg="green", bold=True)
+        click.secho(new_location, fg="white")
 
 
 def run_refresh_config(ctx):
@@ -271,7 +288,7 @@ def run_set_config(self, update=False):
     pat_updated = False
     changes_made = False
 
-    first_run = not config["configured"]
+    first_run = not get_is_configured()
 
     if first_run:
         click.secho("Welcome to CrunchR!", fg="green")
@@ -456,8 +473,6 @@ def run_set_config(self, update=False):
                 github_pat,
             )
             pat_updated = True
-
-    config["configured"] = True
 
     generate_config_yaml(config)
 
