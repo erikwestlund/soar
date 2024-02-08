@@ -1,4 +1,4 @@
-from config import run_copy_config, get_config, get_config_location, get_is_configured
+from config import run_link_config, get_config, get_config_location, get_is_configured
 import click
 import yaml
 
@@ -188,4 +188,4 @@ def run_configure_project(ctx, project_id=None):
     with open(get_config_location(), "w") as file:
         yaml.dump(config, file)
 
-    run_copy_config()
+    run_link_config()

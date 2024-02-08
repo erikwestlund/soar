@@ -1,5 +1,4 @@
 import logging
-import os
 
 import click
 import rpy2.robjects.packages as rpackages
@@ -7,6 +6,11 @@ from rpy2.rinterface_lib.callbacks import logger as rpy2_logger
 
 rpy2_logger.setLevel(logging.ERROR)
 keyring = rpackages.importr("keyring")
+nrow = rpackages.importr("base").nrow
+
+
+def get_keyring_exists():
+    return nrow(keyring.key_list())[0] > 0
 
 
 def get_password(keyring_name, username):
@@ -21,17 +25,43 @@ def keyring_is_locked():
 
 
 def set_keyring_password(keyring_name, jhed_username, jhed_password):
+    if not keyring_name or not jhed_username or not jhed_password:
+        click.secho(
+            " 💣 Missing keyring name, JHED username, or JHED password.",
+            fg="red",
+            bold=True,
+        )
+        click.secho("Keyring has not been configured.", fg="red", bold=True)
+        click.secho("Run `soar configure` to configure keyring.", fg="red", bold=True)
+        return None
+
+    if keyring_is_locked():
+        unlock_keyring()
+
     keyring.key_set_with_value(keyring_name, jhed_username, jhed_password)
 
 
 def unlock_keyring():
-    click.secho("🔐 Unlock your keyring to proceed.", bg="white", fg="red", bold=True)
-    click.secho(
-        "If this is your first time, pick a password different from your JHED's.",
-        bg="white",
-        fg="red",
-        bold=True,
-    )
+    keyring_exists = get_keyring_exists()
+
+    if keyring_exists:
+        click.secho(
+            "🔐 Unlock your keyring to proceed.\n", bg="white", fg="red", bold=True
+        )
+    else:
+        click.secho(
+            "The Keyring is used to securely store credentials.",
+            bg="white",
+            fg="red",
+            bold=True,
+        )
+        click.secho(
+            "Enter a password to unlock your keying. This should be different from your JHED.\n",
+            bg="white",
+            fg="red",
+            bold=True,
+        )
+
     try:
         keyring.keyring_unlock()
     except Exception as e:

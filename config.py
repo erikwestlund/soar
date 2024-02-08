@@ -18,6 +18,88 @@ from credentials import (
 keyring = rpackages.importr("keyring")
 
 
+def configure_keyring_password():
+    unlock_keyring()
+
+
+def configure_jhed_credentials(update=False):
+    config = get_config()
+    password_updated = False
+    changes_made = False
+
+    first_run = not get_is_configured()
+
+    if first_run:
+        click.secho(
+            "Let's get started by configuring your JHED credentials.", fg="green"
+        )
+
+    if keyring_is_locked():
+        unlock_keyring()
+
+    if update:
+        click.secho("Blank answers will not be recorded.", fg="yellow")
+
+    # Set JHED if not set or update is True
+    jhed_username_default = (
+        config["default"]["credentials"]["jhed"]["username"] or get_default_jhed()
+    )
+
+    if first_run or update or not config["default"]["credentials"]["jhed"]["username"]:
+        config["default"]["credentials"]["jhed"]["username"] = (
+            click.prompt(
+                "Enter your JHED (without @jh.edu)",
+                default=jhed_username_default or "",
+                show_default=True if jhed_username_default else False,
+            ).strip()
+            or None
+        )
+        changes_made = True
+
+    # Set JHED password if not set or update is True
+    jhed_password_set = user_has_jhed_password(
+        config["default"]["credentials"]["jhed"]["username"]
+    )
+    if first_run or update or not jhed_password_set:
+        current_password = get_password(
+            "jhed", config["default"]["credentials"]["jhed"]["username"]
+        )
+        click.secho(
+            "Your JHED password is required for mounting volumes and interacting with other JHU-related resources.",
+            fg="yellow",
+        )
+        click.secho(
+            "This password will be securely stored in the system keyring.", fg="yellow"
+        )
+        jhed_password = click.prompt(
+            "Enter your JHED password", hide_input=True, default="", show_default=False
+        ).strip()
+
+        if jhed_password != "":
+            set_keyring_password(
+                "jhed",
+                config["default"]["credentials"]["jhed"]["username"],
+                jhed_password,
+            )
+            password_updated = True
+
+    generate_config_yaml(config)
+
+    if password_updated:
+        click.secho("Password updated.", fg="green")
+
+    if changes_made:
+        click.secho("✅ Configuration saved to config.yml.", fg="green")
+    else:
+        click.secho(
+            "No changes made. To update your config, run configure with the -u flag.",
+            fg="yellow",
+        )
+
+    install_soarrc()
+    run_link_config()
+
+
 def check_config(config=None, check_password=False):
     config = config if config else get_config()
 
@@ -245,14 +327,18 @@ def install_soarrc():
         )
 
 
-def run_copy_config():
+def run_link_config():
     config = get_config()
     new_location = get_workspace_dir() + "/config.yml"
 
     if os.path.exists(get_workspace_dir()):
-        os.system(f"cp {get_soar_dir()}/config.yml {new_location}")
-        click.secho("✅ Configuration copied to:", fg="green", bold=True)
-        click.secho(new_location, fg="white")
+        os.system(f"ln -s {new_location} {get_config_location()} ")
+    else:
+        click.secho(
+            "⚠️ This looks like a non-CrunchR platform. Cannot links config files because default config paths do not exist.",
+            fg="yellow",
+            bold=True,
+        )
 
 
 def run_refresh_config(ctx):
@@ -282,6 +368,52 @@ def run_reset_keyring(ctx):
     )
 
 
+def configure_github_credentials():
+    pass
+
+
+def configure_ggplot_settings():
+    pass
+
+
+def run_select_options(ctx, option=None):
+    if option:
+        if option == "jhed":
+            choice = 1
+        elif option == "github":
+            choice = 2
+        elif option == "ggplot" or option == "ggplot2":
+            choice = 3
+        elif option == "keyring":
+            choice = 4
+        else:
+            click.secho("Invalid option.", fg="red", bold=True)
+            exit(1)
+
+    if not option:
+        click.secho("🔧 Configure your CrunchR container.\n", fg="green", bold=True)
+        click.secho("Select from one of the below options:", fg="green")
+        click.secho("(1) JHED Credentials", fg="white")
+        click.secho("(2) Github Settings", fg="white")
+        click.secho("(3) ggplot2 Settings", fg="white")
+        click.secho("(4) Keyring password", fg="white")
+        choice = click.prompt("Enter your choice", type=click.Choice(["1", "2", "3", "4"]))
+
+    choice = int(choice)
+
+    if choice == 1:
+        configure_jhed_credentials(True)
+    elif choice == 2:
+        configure_github_credentials()
+    elif choice == 3:
+        configure_ggplot_settings()
+    elif choice == 4:
+        configure_keyring_password()
+    else:
+        click.secho("Invalid option.", fg="red", bold=True)
+        exit(1)
+
+
 def run_set_config(self, update=False):
     config = get_config()
     password_updated = False
@@ -291,8 +423,9 @@ def run_set_config(self, update=False):
     first_run = not get_is_configured()
 
     if first_run:
-        click.secho("Welcome to CrunchR!", fg="green")
-        click.secho("Let's get started by configuring your container.", fg="green")
+        click.secho(
+            "Let's get started by configuring your JHED credentials.", fg="green"
+        )
     else:
         click.secho("Update Crunchr Configuration.", fg="green")
 
@@ -491,7 +624,7 @@ def run_set_config(self, update=False):
         )
 
     install_soarrc()
-    run_copy_config()
+    run_link_config()
 
 
 def write_config(config):

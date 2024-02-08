@@ -1,10 +1,15 @@
 import click
 from config import (
-    run_copy_config,
+    get_is_configured,
+    run_link_config,
     run_refresh_config,
     run_reset_keyring,
+    run_select_options,
     run_set_config,
+    configure_keyring_password,
+    configure_jhed_credentials,
 )
+
 from enhance import (
     run_enhance_shell,
     run_install_rstudio_keybindings,
@@ -15,10 +20,32 @@ from install import (
     run_install_r_data_analysis_tools,
     run_install_r_ohdsi_tools,
 )
+from logo import print_logo
 from make import make_kerberos_auth
 from mount import run_mount_home, run_mount_safe
 from project import run_configure_project
 from status import get_status
+
+
+if __name__ == "__main__":
+    print_logo()
+    if not get_is_configured():
+        click.secho("Welcome to Crunchr!", fg="blue", bold=True)
+        click.secho(
+            "Let's get started by configuring your security credentials.\n", fg="green"
+        )
+        configure_keyring_password()
+        configure_jhed_credentials()
+
+        click.secho("🎉 Initial configuration complete.", fg="blue", bold=True)
+        click.secho(
+            "Type `soar configure` to further configure your profile.",
+            fg="blue",
+            bold=True,
+        )
+        click.secho("Type `soar` to see what else you can do.", fg="blue", bold=True)
+
+        exit(1)
 
 
 @click.group()
@@ -28,27 +55,20 @@ def main(ctx):
 
 
 @main.command()
+@click.argument("setting", required=False)
 @click.pass_context
-@click.option(
-    "--update",
-    "-u",
-    is_flag=True,
-    show_default=True,
-    help="Update all configuration items. Default is to update only empty values.",
-)
-@click.option(
-    "--refresh",
-    "-r",
-    is_flag=True,
-    show_default=True,
-    help="Refresh config to ensure it has all default values.",
-)
-def configure(ctx, update, refresh=False):
-    """Configure your CrunchR container."""
-    if refresh:
-        run_refresh_config(ctx)
-    else:
-        run_set_config(ctx, update)
+def configure(ctx, setting=None):
+    """
+    Configure your CrunchR container.
+
+    Setting options:\n
+     - jhed: Set your JHED credentials.\n
+     - github: Set your GitHub credentials.\n
+     - ggplot: Set your ggplot2 settings.\n
+     - keyring: Set your keyring password.
+    """
+
+    run_select_options(ctx, setting)
 
 
 @main.command()
@@ -108,7 +128,7 @@ def copy(ctx):
 @click.pass_context
 def copy_config(ctx):
     """Copies your config.yml to your home directory."""
-    run_copy_config()
+    run_link_config()
 
 
 @main.group()
