@@ -18,19 +18,25 @@ Install the tool by running this command from an RStudio terminal in a Crunchr c
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/erikwestlund/soar/master/install.sh)" && source ~/.bashrc
 ```
 
+This will install the package on your persistent storage, and add the `soar` command to your shell. The package will thus be available across containers.
+
 ## Usage
 
 All commands must be run from a Terminal window in RStudio.
 
-Upon a successful installation, type `soar configure` to configure your container. You will be asked to enter a keyring password, which will be used to encrypt your credentials. You will also be asked to enter your JHED username and password.
+Upon a successful first-time installation, type `soar` to configure your container. You will be asked to enter a keyring password, which will be used to encrypt your credentials. You will also be asked to enter your JHED username and password.
 
-To update your configuration at any time, type `soar configure -u` again (note the `-u` flag).
+After configuration, you can use the `soar` command to access the various options available.  You can type `crunchr,` which is an alias for the `soar` command.
 
-After configuration, you can use the `soar` command to access the various options available.
+Most commands will prompt you for actions, making it easy to use the tool without memorizing all the options.
 
-To view sub-options for the list commends, type `soar <sub-option>`. For example, type `soar install` to see the various different installation options.
+However, you can also type `soar <command> --help` to see the various options available for each command.
 
-You can type `Crunchr` instead of `soar` to access the same commands.
+## Configuration
+
+To update your configuration at any time, type `soar configure`. You will be prompted with a list of options for what you would like to update.
+
+Your configuration is stored in the `config.yml` file in your soar package directory. This file is sym-linked to your workspace directory in your container, making you able to access it using the R config package by simply running `config::get()`.
 
 ## Features
 
@@ -45,8 +51,11 @@ The `soar mount` commands allow you to mount network volumes. This is useful for
 
 The `soar install` commands allow you to install software and dependencies.
 
-* `soar install r-data-science` installs useful R packages, such as the Tidyverse suite and numerous database connection utilities.
+* `soar install r-data-tools` installs useful R packages for managing and manipulating data, such as the Tidyverse suite and numerous database connection utilities.
+* `soar install r-data-analysis` installs useful R packages for analyzing data, such as packages for applied regression analysis, multilevel modeling, Bayesian analysis, and more.
 * `soar install r-ohdsi` installs useful OHDSI-related packages, such as rJava.
+* `soar install r-data-suite` installs the R data tools and analysis packages.
+* `soar install all` installs all of the above packages.
 
 ### Enhancing Your Container
 
@@ -60,11 +69,24 @@ The `soar enhance` commands allow you to enhance your container environment.
 
 The `soar configure` commands allow you to manage your credentials. It does so by creating a secure keyring that is encrypted with a password you provide.
 
-You can store your JHED password in the keyring, as well as any other credentials you need to access databases and other services, such as Github Personal Access Tokens.
+The keyring is split up by services. For example, there is a `jhed` service for your JHED credentials, and a `github` service for your Github credentials.
 
-To access your credentials from R, use the `keyring` package.
+To access your credentials from R, use the `keyring` package. For example:
+* To access your JHED password, you would run `keyring::key_get("jhed", "[jhed_username]")`.
+* To access your Github Personal Access Token, you would run `keyring::key_get("github", "[github_username]")`.
 
 Should you forget or mis-type your keyring password, you can reset it by typing `soar keyring-reset`.
+
+## Managing Projects
+
+The `soar project` commands allow you to manage your project configuration files.
+
+Running `soar project` will prompt you with a list of options for managing your project configuration files.
+
+Upon configuring your project, example files using the convention `config.[project].yml` will be created in your projects directory of the installed SOAR package. They will also be copied to the workspace directory in your container.
+
+These files should be stored with the source code for individual projects. They can be merged with your personal configuration using the `config` project in R.
+
 
 ### Generating Config and Other Templates
 
@@ -76,6 +98,10 @@ Upon running `soar make`, you will be asked to enter the necessary information t
 
 The program will return directions on how to incorporate the generated config files into your analysis notebooks and scripts.
 
+
+### Status
+
+You can view all of your current settings and configurations by typing `soar status`.
 
 ## Package Information
 
