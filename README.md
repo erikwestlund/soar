@@ -30,7 +30,7 @@ After configuration, you can use the `soar` command to access the various option
 
 To view sub-options for the list commends, type `soar <sub-option>`. For example, type `soar install` to see the various different installation options.
 
-You can type `crunchr` instead of `soar` to access the same commands.
+You can type `Crunchr` instead of `soar` to access the same commands.
 
 ## Features
 

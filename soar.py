@@ -1,49 +1,48 @@
 import click
+import os
+
 from config import (
+    configure_github_settings,
+    configure_jhed_credentials,
+    configure_keyring_password,
+    get_home_directory,
     get_is_configured,
     run_link_config,
-    run_refresh_config,
     run_reset_keyring,
-    run_select_options,
-    run_set_config,
-    configure_keyring_password,
-    configure_jhed_credentials,
+    run_select_config_options,
 )
-
 from enhance import (
-    run_enhance_shell,
-    run_install_rstudio_keybindings,
-    run_install_aliases,
+    run_select_enhance_options,
 )
-from install import (
-    run_install_r_data_science_tools,
-    run_install_r_data_analysis_tools,
-    run_install_r_ohdsi_tools,
-)
+from install import run_select_install_options
 from logo import print_logo
 from make import make_kerberos_auth
-from mount import run_mount_home, run_mount_safe
-from project import run_configure_project
-from status import get_status
-
+from mount import run_select_mount_options
+from project import run_select_project_options
+from status import run_show_status
 
 if __name__ == "__main__":
     print_logo()
     if not get_is_configured():
         click.secho("Welcome to Crunchr!", fg="blue", bold=True)
         click.secho(
-            "Let's get started by configuring your security credentials.\n", fg="green"
+            "Let's get started by configuring your security credentials\n", fg="green"
         )
         configure_keyring_password()
         configure_jhed_credentials()
 
         click.secho("🎉 Initial configuration complete.", fg="blue", bold=True)
-        click.secho(
-            "Type `soar configure` to further configure your profile.",
-            fg="blue",
-            bold=True,
-        )
-        click.secho("Type `soar` to see what else you can do.", fg="blue", bold=True)
+
+        if click.confirm(
+            "Would you like to configure your GitHub credentials?", default=True
+        ):
+            configure_github_settings()
+        else:
+            click.secho(
+                "Type `soar configure` to further configure your profile.", fg="blue"
+            )
+
+        click.secho("Type `soar` to see what else you can do.", fg="blue")
 
         exit(1)
 
@@ -51,159 +50,122 @@ if __name__ == "__main__":
 @click.group()
 @click.pass_context
 def main(ctx):
-    """Tooling to make CrunchR soar."""
+    """Tooling to make Crunchr soar."""
 
 
 @main.command()
-@click.argument("setting", required=False)
+@click.argument("option", required=False)
 @click.pass_context
-def configure(ctx, setting=None):
+def configure(ctx, option=None):
     """
-    Configure your CrunchR container.
+    Configure your Crunchr container
 
-    Setting options:\n
-     - jhed: Set your JHED credentials.\n
-     - github: Set your GitHub credentials.\n
-     - ggplot: Set your ggplot2 settings.\n
-     - keyring: Set your keyring password.
+    Options:\n
+     - jhed: Set your JHED credentials\n
+     - github: Set your GitHub credentials\n
+     - keyring: Set your keyring password
     """
 
-    run_select_options(ctx, setting)
-
-
-@main.command()
-@click.pass_context
-def status(ctx):
-    """Get the status of your CrunchR container."""
-    get_status(ctx)
+    run_select_config_options(ctx, setting)
 
 
 @main.command()
 @click.pass_context
 def reset_keyring(ctx):
-    """Reset your keyring."""
+    """Reset your keyring"""
     run_reset_keyring(ctx)
 
 
-@main.group()
+@main.command()
+@click.argument("option", required=False)
 @click.pass_context
-def install(ctx):
-    """Install useful packages and software."""
+def install(ctx, option=None):
+    """
+    Install useful packages and software
+
+    Options:\n
+     - r-data-tools: R data tools (e.g., Tidyverse, database connectors)\n
+     - r-data-analysis: R data analysis packages (e.g., MLM, Bayes, MICE)\n
+     - r-ohdsi: R OHDSI packages\n
+     - r-data-suite: R tools and analysis packages\n
+     - all: Install all\n
+    """
+
+    run_select_install_options(ctx, option)
 
 
-@install.command("r-data-science")
+@main.command()
 @click.pass_context
-def install_r_data_science(ctx):
-    """R data science tools: Tidyverse, database utilities, etc."""
-    run_install_r_data_science_tools(ctx)
-
-
-@install.command("r-data-analysis")
-@click.pass_context
-def install_r_data_science(ctx):
-    """R data analysis tools: multilevel modeling,  Bayesian analysis, etc."""
-    run_install_r_data_analysis_tools(ctx)
-
-
-@install.command("r-ohdsi")
-@click.pass_context
-def install_r_ohdsi_tools(ctx):
-    """R OHDSI tools."""
-    run_install_r_ohdsi_tools(ctx)
-
-
-@main.group()
-@click.pass_context
-def mount(ctx):
-    """Mount network volumes on your container."""
-
-
-@main.group()
-@click.pass_context
-def copy(ctx):
-    """Copy files to useful locations."""
-
-
-@copy.command("config")
-@click.pass_context
-def copy_config(ctx):
-    """Copies your config.yml to your home directory."""
+def link_config(ctx):
+    """Relink your configuration files"""
     run_link_config()
+    click.secho("✅ Config relinked.", fg="green")
 
 
-@main.group()
+@main.command()
+@click.argument("option", required=False)
 @click.pass_context
-def mount(ctx):
-    """Mount network volumes on your container."""
+def mount(ctx, option=None):
+    """
+    Mount network volumes on your container
+
+    Mount options:\n
+     - home: Mount your home directory to your container\n
+     - safe: Mount a SAFE directory to your container\n
+    """
+
+    run_select_mount_options(ctx, option)
 
 
-@mount.command("home")
+@main.command()
+@click.argument("option", required=False)
 @click.pass_context
-def mount_home(ctx):
-    """Mount your home directory to your container."""
-    run_mount_home(ctx)
+def enhance(ctx, option=None):
+    """
+    Enhance your Crunchr container
 
+    Options:\n
+     - aliases: Install enhanced aliases only\n
+     - rstudio-keybindings: Install enhanced keybindings\n
+     - shell: Enhance your shell with Zsh and aliases\n
+    """
 
-@mount.command("safe")
-@click.pass_context
-def mount_home(ctx):
-    """Mount a SAFE directory to your container."""
-    run_mount_safe(ctx)
-
-
-@main.group()
-@click.pass_context
-def enhance(ctx):
-    """Enhance your CrunchR container."""
-
-
-@enhance.command("shell")
-@click.pass_context
-def enhance_shell(ctx):
-    """Enhance your CrunchR shell."""
-    run_enhance_shell(ctx)
-
-
-@enhance.command("aliases")
-@click.pass_context
-def enhance_aliases(ctx):
-    """Install useful shell aliases."""
-    run_install_aliases(ctx)
-
-
-@enhance.command("rstudio-keybindings")
-@click.pass_context
-def https_sync(ctx):
-    """Install enhanced RStudio keybindings."""
-    run_install_rstudio_keybindings(ctx)
+    run_select_enhance_options(ctx, option)
 
 
 @main.group()
 @click.pass_context
 def make(ctx):
-    """Make files using templates (e.g., database config files)."""
+    """Make files using templates (e.g., database config files)"""
 
 
 @make.command("kerberos-auth")
 @click.pass_context
 def enhance_shell(ctx):
-    """Create a kerberos auth template."""
+    """Create a kerberos auth template"""
     make_kerberos_auth(ctx)
 
 
-@main.group()
+@main.command()
+@click.argument("option", required=False)
 @click.pass_context
-def project(ctx):
-    """Project tools (e.g., configuring database credentials)."""
+def project(ctx, option=None):
+    """
+    Project tools
+
+    Options:\n
+     - generic: Configure a generic project\n
+     - pmap: Configure a PMAP project\n
+     - existing: Configure an existing project\n
+    """
+    run_select_project_options(ctx, option)
 
 
-@project.command("configure")
-@click.argument("project_id", required=False)
+@main.command()
 @click.pass_context
-def configure_project(ctx, project_id):
-    """Configure your project."""
-
-    run_configure_project(ctx, project_id)
+def status(ctx):
+    """Show details about your configuration and projects"""
+    run_show_status(ctx)
 
 
 if __name__ == "__main__":

@@ -92,9 +92,9 @@ fi
 echo "alias soar=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.bash_profile
 echo "alias soar=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.zshrc
 echo "alias soar=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.bashrc
-echo "alias crunchr=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.bash_profile
-echo "alias crunchr=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.zshrc
-echo "alias crunchr=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.bashrc
+echo "alias Crunchr=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.bash_profile
+echo "alias Crunchr=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.zshrc
+echo "alias Crunchr=\"python3 $STORAGE_DIR/soar/soar.py\"" >> ~/.bashrc
 
 
 # Add .soarrc
@@ -112,4 +112,4 @@ if [ -f "$STORAGE_DIR/soar/config.yml" ]; then
 fi
 
 echo "🎉 Installation complete!"
-echo "Type \"crunchr configure\" to use Soar."
+echo "Type \"Crunchr configure\" to use Soar."

@@ -6,9 +6,12 @@ from config import check_config_with_password, get_config
 from credentials import (
     get_password,
 )
+from crunchr import confirm_crunchr_environment
 
 
 def run_mount_home(ctx):
+    confirm_crunchr_environment()
+
     if not check_config_with_password():
         click.secho("Exiting.", fg="red", bold=True)
         exit(1)
@@ -32,6 +35,8 @@ def run_mount_home(ctx):
 
 
 def run_mount_safe(ctx):
+    confirm_crunchr_environment()
+
     if not check_config_with_password():
         click.secho("Exiting.", fg="red", bold=True)
         exit(1)
@@ -57,3 +62,39 @@ def run_mount_safe(ctx):
     os.system(mount_string)
 
     click.secho(f"✅ Mounted SAFE directory to {safe_dir}.", fg="green", bold=True)
+
+
+def run_select_mount_options(ctx, option=None):
+    if option:
+        if option == "home":
+            choice = "1"
+        elif option == "safe":
+            choice = "2"
+        elif option == "both":
+            choice = "3"
+        else:
+            click.secho("Invalid option.", fg="red", bold=True)
+            exit(1)
+
+    if not option:
+        click.secho("💾 Mount Storage.\n", fg="green", bold=True)
+        click.secho("Select from one of the below options:\n", fg="green")
+        click.secho("(1) Mount Home directory", fg="white")
+        click.secho("(2) Mount SAFE directory", fg="white")
+        click.secho("(3) Mount both", fg="white")
+        click.secho("(4) Cancel\n", fg="white")
+        choice = click.prompt("Enter the number of your selection", type=str)
+
+    if choice == "1":
+        run_mount_home(ctx)
+    elif choice == "2":
+        run_mount_safe(ctx)
+    elif choice == "3":
+        run_mount_home(ctx)
+        run_mount_safe(ctx)
+    elif choice == "4":
+        click.secho("Cancelled.", fg="red", bold=True)
+        exit(1)
+    else:
+        click.secho("Invalid option.", fg="red", bold=True)
+        exit(1)

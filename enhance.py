@@ -11,6 +11,7 @@ from config import (
     get_aliases_home_path,
     get_bashrc_path,
     get_config,
+    get_home_directory,
     get_resources_path,
     get_rstudio_config_path,
     get_rstudio_keybindings_dir,
@@ -23,8 +24,10 @@ from config import (
     get_zshrc_path,
 )
 
+from crunchr import confirm_crunchr_environment
 
-def run_enhance_shell(ctx):
+
+def run_enhance_shell():
     if not check_config():
         click.secho("Exiting.", fg="red", bold=True)
         exit(1)
@@ -34,7 +37,7 @@ def run_enhance_shell(ctx):
     os.system("sh " + install_script)
 
     click.secho("Installing quick aliases...")
-    run_install_aliases(ctx, install_bash=False, install_zsh=True)
+    run_install_aliases(install_bash=False, install_zsh=True)
 
     click.secho("Changing default RStudio shell to Zsh...")
     rstudio_options_path = f"{get_rstudio_config_path()}/rstudio-prefs.json"
@@ -53,7 +56,7 @@ def run_enhance_shell(ctx):
     )
 
 
-def run_install_aliases(ctx, install_bash=True, install_zsh=True):
+def run_install_aliases(install_bash=True, install_zsh=True):
     if not check_config():
         click.secho("Exiting.", fg="red", bold=True)
         exit(1)
@@ -100,7 +103,7 @@ def run_install_aliases(ctx, install_bash=True, install_zsh=True):
     click.secho("✅ Done.", fg="green")
 
 
-def run_install_rstudio_keybindings(ctx):
+def run_install_rstudio_keybindings():
     if not check_config():
         click.secho("Exiting.", fg="red", bold=True)
         exit(1)
@@ -134,3 +137,45 @@ def run_install_rstudio_keybindings(ctx):
         bg="white",
     )
     click.secho("Save your work before terminating.", bold=True, fg="red", bg="white")
+
+
+def run_select_enhance_options(ctx, option=None):
+    if option:
+        if option == "aliases":
+            choice = "1"
+        elif option == "rstudio-keybindings":
+            choice = "2"
+        elif option == "shell":
+            choice = "3"
+        else:
+            click.secho("Invalid option.", fg="red", bold=True)
+            exit(1)
+
+    if not option:
+        click.secho("🚀 Enhance your Crunchr container.\n", fg="green", bold=True)
+        click.secho("Select from one of the below options:\n", fg="green")
+        click.secho("(1) Add enhanced shell aliases", fg="white")
+        click.secho("(2) Install enhanced RStudio keybindings", fg="white")
+        click.secho(
+            "(3) Enhance your shell environment with Zsh and aliases", fg="white"
+        )
+        click.secho("(4) Cancel\n", fg="white")
+        choice = click.prompt(
+            "Enter your choice", type=click.Choice(["1", "2", "3", "4"])
+        )
+
+    if choice == "4":
+        click.secho("Cancelled.", fg="red", bold=True)
+        exit(1)
+
+    confirm_crunchr_environment()
+
+    if choice == "1":
+        run_install_aliases()
+    elif choice == "2":
+        run_install_rstudio_keybindings()
+    elif choice == "3":
+        run_enhance_shell()
+    else:
+        click.secho("Invalid option.", fg="red", bold=True)
+        exit(1)

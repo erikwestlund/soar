@@ -24,21 +24,20 @@ def keyring_is_locked():
     return keyring.keyring_is_locked()[0]
 
 
-def set_keyring_password(keyring_name, jhed_username, jhed_password):
-    if not keyring_name or not jhed_username or not jhed_password:
+def set_keyring_password(keyring_name, username, password):
+    if not keyring_name or not username or not password:
         click.secho(
-            " 💣 Missing keyring name, JHED username, or JHED password.",
+            " 💣 Missing keyring name, username, or password.",
             fg="red",
             bold=True,
         )
-        click.secho("Keyring has not been configured.", fg="red", bold=True)
-        click.secho("Run `soar configure` to configure keyring.", fg="red", bold=True)
+        click.secho("Keyring has not been updated.", fg="red", bold=True)
         return None
 
     if keyring_is_locked():
         unlock_keyring()
 
-    keyring.key_set_with_value(keyring_name, jhed_username, jhed_password)
+    keyring.key_set_with_value(keyring_name, username, password)
 
 
 def unlock_keyring():
@@ -46,7 +45,7 @@ def unlock_keyring():
 
     if keyring_exists:
         click.secho(
-            "🔐 Unlock your keyring to proceed.\n", bg="white", fg="red", bold=True
+            "🔐 Unlock your keyring to proceed.", bg="white", fg="red", bold=True
         )
     else:
         click.secho(
