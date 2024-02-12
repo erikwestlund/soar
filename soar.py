@@ -16,8 +16,10 @@ from enhance import (
 )
 from install import run_select_install_options
 from logo import print_logo
-from make import make_kerberos_auth
+from make import run_select_make_options
 from mount import run_select_mount_options
+from ohdsi import run_select_ohdsi_options
+from pmap import run_select_pmap_options
 from project import run_select_project_options
 from status import run_show_status
 
@@ -44,7 +46,7 @@ if __name__ == "__main__":
 
         click.secho("Type `soar` to see what else you can do.", fg="blue")
 
-        exit(1)
+        exit(0)
 
 
 @click.group()
@@ -54,9 +56,9 @@ def main(ctx):
 
 
 @main.command()
-@click.argument("option", required=False)
+@click.argument("setting", required=False)
 @click.pass_context
-def configure(ctx, option=None):
+def configure(ctx, setting=None):
     """
     Configure your Crunchr container
 
@@ -99,7 +101,7 @@ def install(ctx, option=None):
 def link_config(ctx):
     """Relink your configuration files"""
     run_link_config()
-    click.secho("✅ Config relinked.", fg="green")
+    click.secho("✅  Config relinked.", fg="green")
 
 
 @main.command()
@@ -133,23 +135,25 @@ def enhance(ctx, option=None):
     run_select_enhance_options(ctx, option)
 
 
-@main.group()
+@main.command()
 @click.pass_context
 def make(ctx):
-    """Make files using templates (e.g., database config files)"""
+    """
+    Make files using templates (e.g., database config files)
 
+    Options:\n
+    - dbi-connect: Make an ODBC DBI connection file\n
+    - kerberos: Scaffold Kerberos authentication\n
+    """
 
-@make.command("kerberos-auth")
-@click.pass_context
-def enhance_shell(ctx):
-    """Create a kerberos auth template"""
-    make_kerberos_auth(ctx)
+    run_select_make_options(ctx, None)
+
 
 
 @main.command()
-@click.argument("option", required=False)
+@click.argument("setting", required=False)
 @click.pass_context
-def project(ctx, option=None):
+def project(ctx, setting=None):
     """
     Project tools
 
@@ -158,7 +162,36 @@ def project(ctx, option=None):
      - pmap: Configure a PMAP project\n
      - existing: Configure an existing project\n
     """
-    run_select_project_options(ctx, option)
+    run_select_project_options(ctx, setting)
+
+
+@main.command()
+@click.argument("setting", required=False)
+@click.pass_context
+def pmap(ctx, setting=None):
+    """
+    PMAP tools
+
+    Options:\n
+     - project: Configure a PMAP project\n
+     - existing: Configure an existing project\n
+    """
+    run_select_pmap_options(ctx, setting)
+
+
+@main.command()
+@click.argument("setting", required=False)
+@click.pass_context
+def ohdsi(ctx, setting=None):
+    """
+    OHDSI tools
+
+    Options:\n
+     - project: Configure a PMAP project\n
+     - existing: Configure an existing project\n
+     - install: Install OHDSI tools and R packages\n
+    """
+    run_select_ohdsi_options(ctx, setting)
 
 
 @main.command()

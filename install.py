@@ -14,7 +14,7 @@ def run_install_r_data_science_tools():
     script = get_resources_path() + "/install/r-data-science.sh"
     os.system("/bin/sh " + script)
 
-    click.secho("✅ Done.", fg="green")
+    click.secho("✅  Done.", fg="green")
 
 
 def run_install_r_data_analysis_tools():
@@ -25,7 +25,7 @@ def run_install_r_data_analysis_tools():
     script = get_resources_path() + "/install/r-data-analysis.sh"
     os.system("/bin/sh " + script)
 
-    click.secho("✅ Done.", fg="green")
+    click.secho("✅  Done.", fg="green")
 
 
 def run_install_r_ohdsi_tools():
@@ -36,7 +36,7 @@ def run_install_r_ohdsi_tools():
     script = get_resources_path() + "/install/r-ohdsi.sh"
     os.system("/bin/sh " + script)
 
-    click.secho("✅ Done.", fg="green")
+    click.secho("✅  Done.", fg="green")
 
 
 def run_select_install_options(ctx, option=None):
@@ -55,7 +55,7 @@ def run_select_install_options(ctx, option=None):
             click.secho("Invalid option.", fg="red", bold=True)
             exit(1)
 
-    if not option:
+    else:
         click.secho("🛠️ Install Software & Packages.\n", fg="green", bold=True)
         click.secho("Select from one of the below options:\n", fg="green")
         click.secho(
@@ -75,7 +75,7 @@ def run_select_install_options(ctx, option=None):
 
     if choice == "6":
         click.secho("Cancelled.", fg="red", bold=True)
-        exit(1)
+        exit(0)
 
     confirm_crunchr_environment()
 

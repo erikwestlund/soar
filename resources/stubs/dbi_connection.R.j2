@@ -1,0 +1,18 @@
+library(DBI)
+library(odbc)
+
+project_settings <- config::get("{{ project_name }}")$settings
+
+DBI::dbConnect(
+    drv = odbc::odbc(),
+    port = project_settings$db_port,
+    driver = project_settings$db_driver,
+    server = project_settings$db_server,
+    database = project_settings$projection_name,
+    uid = paste0("win\\", project_settings$credentials$jhed$username),
+    pwd = keyring::key_get(
+      service = "jhed",
+      username = project_settings$credentials$jhed$username
+    ),
+    TDS_version = project_config$free_tds_version
+)

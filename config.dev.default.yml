@@ -1,0 +1,23 @@
+default:
+  credentials:
+    jhed:
+     username: null
+    github:
+      email: null
+      username: null
+  settings:
+    github:
+      core_editor: vi
+      default_branch: main
+    paths:
+      python: /Users/erikwestlund/code/soar/venv/bin/python
+      pip: /Users/erikwestlund/code/soar/venv/bin/pip
+      home: /Users/erikwestlund/idies
+      rstudio_keyring: /Users/erikwestlund/idies/.config/r-keyring
+      rstudio_config: /Users/erikwestlund/idies/.config/rstudio
+      workspace: /Users/erikwestlund/idies/workspace
+      home_storage: /Users/erikwestlund/idies/workspace/home
+      storage_parent: /Users/erikwestlund/idies/workspace/Storage
+    volumes:
+      user_home: //mtwfs.nas.jh.edu/HOME
+      s_drive: //cloud.nas.jh.edu/sddesktop$

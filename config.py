@@ -182,7 +182,7 @@ def configure_github_settings():
 
     if changes_made:
         generate_config_yaml(config)
-        click.secho("✅ Configuration saved to config.yml.", fg="green")
+        click.secho("✅  Configuration saved to config.yml.", fg="green")
     else:
         click.secho(
             "No changes made.",
@@ -253,7 +253,7 @@ def configure_jhed_credentials():
         generate_config_yaml(config)
         with (get_soar_dir() / ".jhed_username").open("w") as f:
             f.write(config["default"]["credentials"]["jhed"]["username"])
-        click.secho("✅ Configuration saved to config.yml.", fg="green")
+        click.secho("✅  Configuration saved to config.yml.", fg="green")
     else:
         click.secho(
             "No changes made.",
@@ -310,8 +310,20 @@ def get_config():
     return full_config
 
 
+def get_is_dev_env():
+    return not os.path.exists("/home/idies")
+
+
 def get_config_location(default=False):
-    return Path(__file__).parent / ("config.default.yml" if default else "config.yml")
+
+    if not default:
+        config_file = "config.yml"
+    elif get_is_dev_env():
+        config_file = "config.dev.default.yml"
+    else:
+        config_file = "config.default.yml"
+
+    return (Path(__file__).parent / config_file).resolve()
 
 
 def get_default_config():
@@ -324,7 +336,7 @@ def get_default_config_location():
 
 
 def get_default_jhed():
-    temp_jhed_username_path = Path(__file__).parent / ".jhed_username"
+    temp_jhed_username_path = (Path(__file__).parent / ".jhed_username").resolve()
     try:
         with open(temp_jhed_username_path, "r") as f:
             return f.read().strip()
@@ -366,7 +378,7 @@ def get_rstudio_keybindings_path():
 
 
 def get_soar_dir():
-    return Path(__file__).parent
+    return Path(__file__).parent.resolve()
 
 
 def get_soar_path(path):
@@ -444,7 +456,7 @@ def install_soarrc():
                 f.write(f"\n{source_string}")
     else:
         click.secho(
-            "⚠️ This looks like a non-Crunchr platform. Cannot write all config files because default config paths do not exist.",
+            "⚠️  This looks like a non-Crunchr platform. Cannot write all config files because default config paths do not exist.",
             fg="yellow",
             bold=True,
         )
@@ -455,10 +467,10 @@ def run_link_config():
     new_location = get_workspace_dir() + "/config.yml"
 
     if os.path.exists(get_workspace_dir()):
-        os.system(f"ln -s {new_location} {get_config_location()} ")
+        os.system(f"ln -s {get_config_location()} {new_location}")
     else:
         click.secho(
-            "⚠️ This looks like a non-Crunchr platform. Cannot links config files because default config paths do not exist.",
+            "⚠️  This looks like a non-Crunchr platform. Cannot links config files because default config paths do not exist.",
             fg="yellow",
             bold=True,
         )
@@ -471,7 +483,7 @@ def run_refresh_config(ctx):
     refreshed_config = get_default_config() | config
     write_config(refreshed_config)
 
-    click.secho("✅ Configuration refreshed.", fg="green", bold=True)
+    click.secho("✅  Configuration refreshed.", fg="green", bold=True)
 
     setup_config_files()
 
@@ -517,7 +529,7 @@ def run_select_config_options(ctx, option=None):
             exit(1)
 
     if not option:
-        click.secho("🔧 Configure your Crunchr container.\n", fg="green", bold=True)
+        click.secho("🔧  Configure your Crunchr container.\n", fg="green", bold=True)
         click.secho("Select from one of the below options:\n", fg="green")
         click.secho("(1) JHED Credentials", fg="white")
         click.secho("(2) Github Settings", fg="white")
@@ -535,13 +547,10 @@ def run_select_config_options(ctx, option=None):
         run_reset_keyring({})
     elif choice == "4":
         click.secho("Cancelled.", fg="red", bold=True)
-        exit(1)
+        exit(0)
     else:
         click.secho("Invalid option.", fg="red", bold=True)
         exit(1)
-
-
-
 
 
 def setup_config_files():

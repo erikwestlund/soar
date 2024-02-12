@@ -1,23 +1,24 @@
 default:
-    credentials:
-      jhed:
-        username: null
-      github:
-        email: null
-        username: null
-    settings:
-      github:
-        core_editor: vi
-        default_branch: main
-      paths:
-        python: /usr/local/bin/python3.10
-        pip: /usr/local/bin/pip3.10
-        home: /home/idies
-        rstudio_keyring: /home/idies/.config/r-keyring
-        rstudio_config: /home/idies/.config/rstudio
-        workspace: /home/idies/workspace
-        home_storage: /home/idies/workspace/home
-        storage_parent: /home/idies/workspace/Storage
-      volumes:
-        user_home: //mtwfs.nas.jh.edu/HOME
-        s_drive: //cloud.nas.jh.edu/sddesktop$
+  credentials:
+    github:
+      email: edbwestlund@gmail.com
+      username: erikwestlund
+    jhed:
+      username: ewestlu1
+  settings:
+    github:
+      core_editor: vi
+      default_branch: master
+    paths:
+      home: ~/
+      home_storage: ~/workspace/home
+      pip: /usr/local/bin/pip3.10
+      python: /usr/local/bin/python3.10
+      rstudio_config: ~/.config/rstudio
+      rstudio_keyring: ~/.config/r-keyring
+      storage: ~/workspace/Storage/ewestlu1/persistent
+      storage_parent: ~/workspace/Storage
+      workspace: ~/workspace
+    volumes:
+      s_drive: //cloud.nas.jh.edu/sddesktop$
+      user_home: //mtwfs.nas.jh.edu/HOME

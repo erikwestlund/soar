@@ -27,7 +27,7 @@ def keyring_is_locked():
 def set_keyring_password(keyring_name, username, password):
     if not keyring_name or not username or not password:
         click.secho(
-            " 💣 Missing keyring name, username, or password.",
+            "💣  Missing keyring name, username, or password.",
             fg="red",
             bold=True,
         )
@@ -45,7 +45,7 @@ def unlock_keyring():
 
     if keyring_exists:
         click.secho(
-            "🔐 Unlock your keyring to proceed.", bg="white", fg="red", bold=True
+            "🔐  Unlock your keyring to proceed.", bg="white", fg="red", bold=True
         )
     else:
         click.secho(
@@ -64,7 +64,7 @@ def unlock_keyring():
     try:
         keyring.keyring_unlock()
     except Exception as e:
-        click.secho("💣 Failed to unlock the keyring. Aborting.", fg="red", bold=True)
+        click.secho("💣  Failed to unlock the keyring. Aborting.", fg="red", bold=True)
         click.secho(
             'If you cannot remember your password, rRun "soar reset-keyring" to delete your \nkeyring and start over. Your saved credentials will be lost.',
             fg="red",

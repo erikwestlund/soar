@@ -14,7 +14,7 @@ def run_mount_home(ctx):
 
     if not check_config_with_password():
         click.secho("Exiting.", fg="red", bold=True)
-        exit(1)
+        exit(0)
 
     click.secho("Mounting Home directory. This may take a moment.")
     config = get_config()
@@ -31,7 +31,7 @@ def run_mount_home(ctx):
     os.system(chown_string)
     os.system(mount_string)
 
-    click.secho(f"✅ Mounted Home directory to {home_dir}.", fg="green", bold=True)
+    click.secho(f"✅  Mounted Home directory to {home_dir}.", fg="green", bold=True)
 
 
 def run_mount_safe(ctx):
@@ -61,7 +61,7 @@ def run_mount_safe(ctx):
     os.system(chown_string)
     os.system(mount_string)
 
-    click.secho(f"✅ Mounted SAFE directory to {safe_dir}.", fg="green", bold=True)
+    click.secho(f"✅  Mounted SAFE directory to {safe_dir}.", fg="green", bold=True)
 
 
 def run_select_mount_options(ctx, option=None):
@@ -76,7 +76,7 @@ def run_select_mount_options(ctx, option=None):
             click.secho("Invalid option.", fg="red", bold=True)
             exit(1)
 
-    if not option:
+    else:
         click.secho("💾 Mount Storage.\n", fg="green", bold=True)
         click.secho("Select from one of the below options:\n", fg="green")
         click.secho("(1) Mount Home directory", fg="white")
@@ -94,7 +94,7 @@ def run_select_mount_options(ctx, option=None):
         run_mount_safe(ctx)
     elif choice == "4":
         click.secho("Cancelled.", fg="red", bold=True)
-        exit(1)
+        exit(0)
     else:
         click.secho("Invalid option.", fg="red", bold=True)
         exit(1)

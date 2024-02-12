@@ -51,7 +51,7 @@ def run_enhance_shell():
         f.write(json.dumps(rstudio_options))
 
     click.secho(
-        '✅ Done. Type "zsh" in the terminal to use the enhanced Zsh shell right now.',
+        '✅  Done. Type "zsh" in the terminal to use the enhanced Zsh shell right now.',
         fg="green",
     )
 
@@ -100,7 +100,7 @@ def run_install_aliases(install_bash=True, install_zsh=True):
             if source_string not in f.read():
                 f.write(f"\n{source_string}")
 
-    click.secho("✅ Done.", fg="green")
+    click.secho("✅  Done.", fg="green")
 
 
 def run_install_rstudio_keybindings():
@@ -129,7 +129,7 @@ def run_install_rstudio_keybindings():
         f"cp {rstudio_keybindings_template_path} {rstudio_keybindings_system_path}"
     )
 
-    click.secho("✅ Done.", fg="green")
+    click.secho("✅  Done.", fg="green")
     click.secho(
         '🚨 To make the keybindings take effect, click "Session -> Terminate R" in RStudio.',
         bold=True,
@@ -151,7 +151,7 @@ def run_select_enhance_options(ctx, option=None):
             click.secho("Invalid option.", fg="red", bold=True)
             exit(1)
 
-    if not option:
+    else:
         click.secho("🚀 Enhance your Crunchr container.\n", fg="green", bold=True)
         click.secho("Select from one of the below options:\n", fg="green")
         click.secho("(1) Add enhanced shell aliases", fg="white")
