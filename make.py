@@ -6,6 +6,10 @@ import prompt
 
 
 def make_kerberos_auth(ctx):
+    # Need to go here: https://github.com/OHDSI-JHU/HADES-JHU/blob/main/DatabaseConnector_Kerberos_Auth.R
+    # Go to crunchr and test the above code, make sure it works
+    # Look at results, make sure generate a krb5.conf correctly
+    # Then make sure we generate R code that connects correctly to a scratch
     realm = click.prompt("Enter the realm.", default="WIN.AD.JHU.EDU")
     kdc = click.prompt(
         "Enter the key distribution cluster (KDC.", default="ESGWINMTW6.WIN.AD.JHU.EDU"
