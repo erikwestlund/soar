@@ -1,12 +1,9 @@
 from config import (
-    run_link_config,
-    get_config,
-    get_config_location,
-    get_is_configured,
     get_soar_dir,
     get_workspace_dir,
 )
-from crunchr import confirm_crunchr_environment
+
+import prompt
 import click
 import yaml
 import os
@@ -32,8 +29,11 @@ def configure_project(project_id, project_type=None, existing_project=False):
             bold=True,
         )
         exit(1)
-    elif existing_project and project_type and get_project_config(project_id).get(project_id).get(
-            "type") != project_type:
+    elif (
+        existing_project
+        and project_type
+        and get_project_config(project_id).get(project_id).get("type") != project_type
+    ):
         click.secho(
             f"The project ID `{project_id}` is not of type `{get_project_type_label(project_type)}`.",
             fg="red",
@@ -170,47 +170,12 @@ def get_valid_project_types():
     return ["generic", "pmap", "ohdsi"]
 
 
+def has_project_of_type(type):
+    return bool(get_existing_projects(project_type=type))
+
+
 def project_exists(project_id):
     return project_id in get_existing_projects()
-
-
-def prompt_project_id():
-    valid = False
-    while not valid:
-        project_id = click.prompt(
-            "Enter a project ID. It should be an alphanumeric string without spaces (e.g., 'project_name')",
-            type=str,
-        ).strip()
-
-        if not project_id.replace("_", "").isalnum():
-            click.secho(
-                "The project ID should be an alphanumeric string without spaces.",
-                fg="red",
-                bold=True,
-            )
-
-            valid = False
-
-        elif project_exists(project_id):
-            click.secho(
-                f"The project ID `{project_id}` already exists.",
-                fg="red",
-                bold=True,
-            )
-
-            valid = click.confirm("Do you want to configure the existing project?")
-
-            if valid:
-                return {
-                    "already_exists": True,
-                    "value": project_id,
-                }
-
-        else:
-            return {
-                "already_exists": False,
-                "value": project_id,
-            }
 
 
 def run_configure_existing_project(project_id=None, project_type=None):
@@ -233,32 +198,7 @@ def run_configure_existing_project(project_id=None, project_type=None):
         exit(1)
 
     if not project_id:
-        click.secho(
-            f"The following {get_project_type_label(project_type)} projects were found:"
-            if project_type
-            else "The following projects were found:",
-            fg="green",
-            bold=True,
-        )
-
-        for i, project_id in enumerate(existing_projects):
-            click.secho(f"({i + 1}) {project_id}", fg="white")
-
-        project_id_index = click.prompt(
-            "Enter the project you would like to configure",
-            type=click.Choice([str(i + 1) for i in range(len(existing_projects))]),
-            show_choices=False,
-        )
-
-        try:
-            project_id = existing_projects[int(project_id_index) - 1]
-        except:
-            click.secho(
-                f"Invalid project ID.",
-                fg="red",
-                bold=True,
-            )
-            exit(1)
+        project_id = prompt.existing_proejct(project_type)
 
     configure_project(project_id=project_id, existing_project=True)
 
@@ -275,7 +215,7 @@ def get_project_type_label(project_type):
 
 
 def run_configure_generic_project():
-    project_id_data = prompt_project_id()
+    project_id_data = prompt.project_id()
     configure_project(
         project_id=project_id_data["value"],
         project_type="generic",
@@ -284,7 +224,7 @@ def run_configure_generic_project():
 
 
 def run_configure_pmap_project():
-    project_id_data = prompt_project_id()
+    project_id_data = prompt.project_id()
     configure_project(
         project_id=project_id_data["value"],
         project_type="pmap",
@@ -293,7 +233,7 @@ def run_configure_pmap_project():
 
 
 def run_configure_ohdsi_project():
-    project_id_data = prompt_project_id()
+    project_id_data = prompt.project_id()
     configure_project(
         project_id=project_id_data["value"],
         project_type="ohdsi",
@@ -342,188 +282,96 @@ def run_select_project_options(ctx, option=None):
         exit(0)
 
 
-def update_after_prompt_database_driver(settings):
-    default_db_driver = settings.get("db_driver", "FreeTDS") or ""
-    new_db_driver = click.prompt(
-        "Enter the ODBC database driver",
-        type=str,
-        default=default_db_driver,
-        show_default=bool(default_db_driver),
-    ).strip()
-
-    return update_settings_with_value(settings, "db_driver", new_db_driver)
-
-
-def update_after_prompt_db_port(settings):
-    default_db_port = settings.get("db_port", "1433") or ""
-    new_db_port = click.prompt(
-        "Enter the database port",
-        type=int,
-        default=default_db_port,
-        show_default=bool(default_db_port),
-    )
-
-    return update_settings_with_value(settings, "db_port", new_db_port)
-
-
-def update_after_prompt_db_server(settings):
-    default_db_server = settings.get("db_server", "") or ""
-    new_db_server = click.prompt(
-        "Enter the database server (e.g., dbserver.jhu.edu)",
-        type=str,
-        default=default_db_server,
-        show_default=bool(default_db_server),
-    ).strip()
-
-    return update_settings_with_value(settings, "db_server", new_db_server)
-
-
-def update_after_prompt_irb_number(settings):
-    default_irb_number = settings.get("irb_number", "") or ""
-    new_irb_number = click.prompt(
-        "Enter the IRB number",
-        type=str,
-        default=default_irb_number,
-        show_default=bool(default_irb_number),
-    ).strip()
-
-    return update_settings_with_value(settings, "irb_number", new_irb_number)
-
-
-def update_after_prompt_project_name(settings):
-    default_name = settings.get("name", "") or ""
-    new_project_name = click.prompt(
-        "Enter the name of the project",
-        type=str,
-        default=default_name,
-        show_default=bool(default_name),
-    ).strip()
-
-    return update_settings_with_value(settings, "name", new_project_name)
-
-
-def update_after_prompt_projection_name(settings):
-    default_projection_name = settings.get("projection_name", "") or ""
-    new_projection_name = click.prompt(
-        "Enter the projection database name",
-        type=str,
-        default=default_projection_name,
-        show_default=bool(default_projection_name),
-    ).strip()
-
-    return update_settings_with_value(settings, "projection_name", new_projection_name)
-
-
-def update_after_prompt_omop_projection_name(settings):
-    default_projection_name = settings.get("projection_name", "") or ""
-    new_projection_name = click.prompt(
-        "Enter the OMOP projection database name",
-        type=str,
-        default=default_projection_name,
-        show_default=bool(default_projection_name),
-    ).strip()
-
-    return update_settings_with_value(settings, "projection_name", new_projection_name)
-
-
-def update_after_prompt_safe_folder_name(settings):
-    default_safe_folder_name = settings.get("safe_folder_name", "") or ""
-    new_safe_folder_name = click.prompt(
-        "Enter the SAFE folder name",
-        type=str,
-        default=default_safe_folder_name,
-        show_default=bool(default_safe_folder_name),
-    ).strip()
-
-    return update_settings_with_value(
-        settings, "safe_folder_name", new_safe_folder_name
-    )
-
-
-def update_after_prompt_scratch_db_name(settings):
-    default_scratch_db_name = settings.get("scratch_db_name", "") or ""
-    new_scratch_db_name = click.prompt(
-        "Enter the scratch database name",
-        type=str,
-        default=default_scratch_db_name,
-        show_default=bool(default_scratch_db_name),
-    ).strip()
-
-    return update_settings_with_value(settings, "scratch_db_name", new_scratch_db_name)
-
-
-def update_after_prompt_omop_scratch_db_name(settings):
-    default_scratch_db_name = settings.get("scratch_db_name", "") or ""
-    new_scratch_db_name = click.prompt(
-        "Enter the OMOP scratch database name",
-        type=str,
-        default=default_scratch_db_name,
-        show_default=bool(default_scratch_db_name),
-    ).strip()
-
-    return update_settings_with_value(settings, "scratch_db_name", new_scratch_db_name)
-
-
-def update_after_prompt_scratch_db_schema_name(settings):
-    default_scratch_db_schema_name = settings.get("scratch_db_schema_name", "dbo") or ""
-    new_scratch_db_schema_name = click.prompt(
-        "Enter the scratch database schema name",
-        type=str,
-        default=default_scratch_db_schema_name,
-        show_default=bool(default_scratch_db_schema_name),
-    ).strip()
-
-    return update_settings_with_value(
-        settings, "scratch_db_schema_name", new_scratch_db_schema_name
-    )
-
-
-def update_after_prompt_free_tds_version(settings):
-    default_free_tds_version = settings.get("free_tds_version", "8.0") or ""
-    new_free_tds_version = click.prompt(
-        "Enter the FreeTDS version",
-        type=str,
-        default=default_free_tds_version,
-        show_default=bool(default_free_tds_version),
-    ).strip()
-
-    return update_settings_with_value(
-        settings, "db_free_tds_version", new_free_tds_version
-    )
-
-
 def update_generic_project_settings(settings):
-    settings = update_after_prompt_project_name(settings)
+    settings = update_settings_with_value(
+        settings, "name", prompt.project_name(settings.get("name", "") or "")
+    )
 
     return settings
 
 
 def update_pmap_project_settings(settings):
-    settings = update_after_prompt_irb_number(settings)
-    settings = update_after_prompt_database_driver(settings)
+    settings = update_settings_with_value(
+        settings, "irb_number", prompt.irb_number(settings.get("irb_number", "") or "")
+    )
+    settings = update_settings_with_value(
+        settings,
+        "db_driver",
+        prompt.odbc_db_driver(settings.get("db_driver", "FreeTDS") or ""),
+    )
 
     if settings["db_driver"] == "FreeTDS":
-        settings = update_after_prompt_free_tds_version(settings)
+        settings = update_settings_with_value(
+            settings,
+            "db_free_tds_version",
+            prompt.free_tds_version(settings.get("free_tds_version", "8.0") or ""),
+        )
 
-    settings = update_after_prompt_db_server(settings)
-    settings = update_after_prompt_db_port(settings)
-    settings = update_after_prompt_projection_name(settings)
-    settings = update_after_prompt_scratch_db_name(settings)
-    settings = update_after_prompt_scratch_db_schema_name(settings)
-    settings = update_after_prompt_safe_folder_name(settings)
+    settings = update_settings_with_value(
+        settings, "db_server", prompt.db_server(settings.get("db_server", "") or "")
+    )
+    settings = update_settings_with_value(
+        settings, "db_port", prompt.db_port(settings.get("db_port", "1433") or "")
+    )
+    settings = update_settings_with_value(
+        settings,
+        "projection_name",
+        prompt.projection_db_name(settings.get("projection_name", "") or ""),
+    )
+    settings = update_settings_with_value(
+        settings,
+        "scratch_db_name",
+        prompt.scratch_db_name(settings.get("scratch_db_name", "") or ""),
+    )
+    settings = update_settings_with_value(
+        settings,
+        "scratch_db_schema_name",
+        prompt.scratch_db_schema_name(
+            settings.get("scratch_db_schema_name", "dbo") or ""
+        ),
+    )
+    settings = update_settings_with_value(
+        settings,
+        "safe_folder_name",
+        prompt.safe_folder_name(settings.get("safe_folder_name", "") or ""),
+    )
 
     return settings
 
 
 def update_ohdsi_project_settings(settings):
-    settings = update_after_prompt_irb_number(settings)
+    settings = update_settings_with_value(
+        settings, "irb_number", prompt.irb_number(settings.get("irb_number", "") or "")
+    )
 
-    settings = update_after_prompt_db_server(settings)
-    settings = update_after_prompt_db_port(settings)
-    settings = update_after_prompt_omop_projection_name(settings)
-    settings = update_after_prompt_omop_scratch_db_name(settings)
-    settings = update_after_prompt_scratch_db_schema_name(settings)
-    settings = update_after_prompt_safe_folder_name(settings)
+    settings = update_settings_with_value(
+        settings, "db_server", prompt.db_server(settings.get("db_server", "") or "")
+    )
+    settings = update_settings_with_value(
+        settings, "db_port", prompt.db_port(settings.get("db_port", "1433") or "")
+    )
+    settings = update_settings_with_value(
+        settings,
+        "projection_name",
+        prompt.omop_projection_db_name(settings.get("projection_name", "") or ""),
+    )
+    settings = update_settings_with_value(
+        settings,
+        "scratch_db_name",
+        prompt.omop_scratch_db_name(settings.get("scratch_db_name", "") or ""),
+    )
+    settings = update_settings_with_value(
+        settings,
+        "scratch_db_schema_name",
+        prompt.scratch_db_schema_name(
+            settings.get("scratch_db_schema_name", "dbo") or ""
+        ),
+    )
+    settings = update_settings_with_value(
+        settings,
+        "safe_folder_name",
+        prompt.safe_folder_name(settings.get("safe_folder_name", "") or ""),
+    )
 
     return settings
 

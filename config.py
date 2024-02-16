@@ -381,6 +381,10 @@ def get_soar_dir():
     return Path(__file__).parent.resolve()
 
 
+def get_project_templates_library_dir():
+    return f"{get_soar_dir()}/library"
+
+
 def get_soar_path(path):
     return f"{get_soar_dir()}/{path}"
 

@@ -27,7 +27,6 @@ def run_select_ohdsi_options(ctx, option):
             "Enter your choice", type=click.Choice(["1", "2", "3", "4"])
         )
 
-
     if choice == "1":
         run_configure_existing_project(project_type="ohdsi")
     elif choice == "2":

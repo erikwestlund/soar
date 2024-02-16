@@ -149,7 +149,6 @@ def make(ctx):
     run_select_make_options(ctx, None)
 
 
-
 @main.command()
 @click.argument("setting", required=False)
 @click.pass_context
@@ -175,6 +174,7 @@ def pmap(ctx, setting=None):
     Options:\n
      - project: Configure a PMAP project\n
      - existing: Configure an existing project\n
+     - dbi-connect: Create a DBI connection file for an existing project\n
     """
     run_select_pmap_options(ctx, setting)
 

@@ -1,3 +1,4 @@
 {
-    "quickAddNext": "Ctrl+D"
+    "quickAddNext": "Ctrl+D",
+    "commentUncomment": "Ctrl+/|Ctrl+Shift+C"
 }
